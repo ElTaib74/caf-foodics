@@ -496,7 +496,7 @@
 // CONFIG
 // ═══════════════════════════════════════════════════
 const FOODICS_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI5MGQ1YTcxOC1lMzBkLTQ5ODYtODY0Ni0wNjdlZDBkMzdkMGUiLCJqdGkiOiJhMTVhOWJjYmQwZTM2MGI3MTk0Yzk3ZjI5Y2Q0ZjBkYjUzNzY2YzNjOTFlMjJjYjhjNDFmZmFjYzZlNWZiN2ZjOThlYmRmNDY1MTQzMTg0YSIsImlhdCI6MTc3NzI4MTQzNy4yODg2NjEsIm5iZiI6MTc3NzI4MTQzNy4yODg2NjEsImV4cCI6MTkzNTA0NzgzNi45MDA1MjMsInN1YiI6IjlhMDM4N2NlLWU2MmItNDY4Ni05Yzg3LWY1YjJmZTRhYjUwMiIsInNjb3BlcyI6WyJnZW5lcmFsLnJlYWQiLCJvcmRlcnMubGlzdCIsImNvdXBvbnMucmVhZCIsImN1c3RvbWVycy5hY2NvdW50cy5yZWFkIiwiY3VzdG9tZXJzLmxpc3QiLCJjdXN0b21lcnMubG95YWx0eS5yZWFkIiwiaW52ZW50b3J5LnRyYW5zYWN0aW9ucy5yZWFkIiwiaW52ZW50b3J5LnNldHRpbmdzLnJlYWQiLCJtZW51LmluZ3JlZGllbnRzLnJlYWQiXSwiYnVzaW5lc3MiOiI5YTAzODdjZS1mNjE4LTQ4NzYtOTYzMy05M2E2N2I3MTUwMjgiLCJyZWZlcmVuY2UiOiIzNjgzMzkifQ.xRILb0qEzG68HpJ3-HpdqkoFXFC-_S7sGgDF78ENx_q25fuWoQ3w0qrfAQnjnT7yqzqSKLWlNHsb80YoA272NskOVtGAqp91f_et461ZiIErPV0nSQ2mEO5ds21bDz_PoRPzYvDjkc18GGgM2jWq2-prQ8oiisxJDwD0d58nIYcfO_ehu5F5NtPjrAA0202ob-pJnI6OdapP47Nwnn7PgdfAJCBJ_6AtExMW4sQzTNHOn8F2WdZzevRuigZTj8u3SHY33T49nSZY75VZ9s-b2of5CQ3UsmZYjtxMsXr47K6UXFvY1357BwCGcTyBle_4MH8RKT1WBINioZfB5bY4GGluZAzH-bFtXlfgWh2Lp2rl5OWwIxVfX_ZwGetmSv6Ass7vg0GiTUZ_6HG8UMnAmkXNOM-hdmsQ7PyU6M-4jW_tEB8e6ttGX9EVmQA4dUZ2Skv9lP5MUyPCnnHsS4oNctStB30THly8aP5d3Lit6Ub6QDgDBgMUe29xNOsCfKvCxHjtwTuKnQLfwuW_u89BiFAGFCwGjNrzJEWpIDX5THvEQAuTgzUESw3CW-FuwduIOpHPlWzJ5wdweAQ7wvAaqiSYOqmQ_4ZGM-mJz-kgYvM-czt9UXgg_94Me0Xn8Uj-l-Sm086FT95OWyVNK1NcTvuqj0bsWvYBa_2BCCZ1YeQ";
-const BASE = "https://api-beta.foodics.com/v5";
+const BASE = "/api/foodics";
 
 // Dashboard login credentials
 const USERS = {
@@ -580,7 +580,8 @@ function doLogout() {
 // FOODICS API
 // ═══════════════════════════════════════════════════
 async function apiGet(path, params = {}) {
-  const url = new URL(BASE + path);
+  const url = new URL(window.location.origin + BASE);
+  url.searchParams.set("path", path.replace(/^\//, ""));
   Object.entries(params).forEach(([k, v]) => {
     if (v != null) url.searchParams.set(k, v);
   });

@@ -510,12 +510,6 @@ const BRAND_PREFIXES = {
   WACHAMEAN: ["KWWCH_","KWWCH ","KWHAP_","KWHAP "],
 };
 
-// Human-readable label per company
-const BRAND_LABEL = {
-  CAF:       "CAF",
-  WACHAMEAN: "WACHAMEAN & HAPPY ELLIE",
-};
-
 // Branch accent colors
 const BRANCH_COLORS = [
   "#00d4ff","#8b5cf6","#14b8a6","#3b82f6","#e879f9",
@@ -634,8 +628,8 @@ async function connectFoodics() {
     const wchBranches = allBranches.filter(b => isBrand(b.name, "WACHAMEAN"));
 
     // 3. Update UI stats
-    const wchOnly = allBranches.filter(b => isBrand(b.name, "WACHAMEAN") && (b.name||"").toUpperCase().startsWith("KWWCH"));
-    const hapOnly  = allBranches.filter(b => isBrand(b.name, "WACHAMEAN") && (b.name||"").toUpperCase().startsWith("KWHAP"));
+    const wchOnly = allBranches.filter(b => (b.name||"").toUpperCase().startsWith("KWWCH"));
+    const hapOnly  = allBranches.filter(b => (b.name||"").toUpperCase().startsWith("KWHAP"));
     document.getElementById("stat-total-branches").textContent = allBranches.length;
     document.getElementById("stat-caf").textContent            = cafBranches.length;
     document.getElementById("stat-wch").textContent            = wchBranches.length;
@@ -700,56 +694,50 @@ function switchCo(co) {
 }
 
 function renderBranches(co) {
-  const list = allBranches.filter(b => isBrand(b.name, co));
-  const el   = document.getElementById("branch-list");
-
-  // Separate active vs closed
-  const activeBranches = list.filter(b => b.is_active !== false);
-  const closedBranches = list.filter(b => b.is_active === false);
-  const showClosed     = window._showClosed || false;
-  const displayed      = showClosed ? list : activeBranches;
+  const list   = allBranches.filter(b => isBrand(b.name, co));
+  const el     = document.getElementById("branch-list");
+  const active = list.filter(b => b.is_active !== false);
+  const closed = list.filter(b => b.is_active === false);
+  const show   = window._showClosed ? list : active;
 
   document.getElementById("branch-list-title").textContent =
     (co === "CAF" ? "CAF" : "WACHAMEAN & HAP") + " Branches";
   document.getElementById("branch-list-badge").textContent =
-    activeBranches.length + " active · " + closedBranches.length + " closed";
+    active.length + " active · " + closed.length + " closed";
 
-  // Render toggle button inside header
-  const toggleBtn = document.getElementById("closed-toggle");
-  if (toggleBtn) {
-    toggleBtn.textContent  = showClosed ? "Hide Closed" : "Closed (" + closedBranches.length + ")";
-    toggleBtn.style.background = showClosed ? "rgba(239,68,68,.2)" : "rgba(148,163,184,.1)";
-    toggleBtn.style.color      = showClosed ? "#f87171" : "#94a3b8";
-    toggleBtn.style.borderColor= showClosed ? "rgba(239,68,68,.4)" : "rgba(148,163,184,.2)";
+  const btn = document.getElementById("closed-toggle");
+  if (btn) {
+    btn.textContent   = window._showClosed ? "Hide Closed" : "Closed (" + closed.length + ")";
+    btn.style.background  = window._showClosed ? "rgba(239,68,68,.2)"    : "rgba(148,163,184,.1)";
+    btn.style.color       = window._showClosed ? "#f87171"               : "#94a3b8";
+    btn.style.borderColor = window._showClosed ? "rgba(239,68,68,.4)"    : "rgba(148,163,184,.2)";
   }
 
-  if (!displayed.length) {
+  if (!show.length) {
     el.innerHTML = '<div style="padding:28px;text-align:center;color:var(--muted);font-size:13px">No branches found</div>';
     return;
   }
 
-  el.innerHTML = list.map((b, i) => {
+  el.innerHTML = show.map((b, i) => {
     const displayName = cleanName(b.name, co);
     const isActive    = b.is_active !== false;
     const ref         = b.reference || b.id?.slice(0, 8) || "—";
     const color       = BRANCH_COLORS[i % BRANCH_COLORS.length];
     const raw         = (b.name || "").toUpperCase();
-    const tag         = raw.startsWith("KWCAF") ? { label:"CAF", bg:"rgba(30,30,30,.7)",    c:"#e2e8f0" }
-                      : raw.startsWith("KWWCH") ? { label:"WCH", bg:"rgba(185,28,28,.2)",   c:"#f87171" }
-                      : raw.startsWith("KWHAP") ? { label:"HAP", bg:"rgba(6,182,212,.15)",  c:"#22d3ee" }
-                      :                           { label:"???", bg:"rgba(148,163,184,.1)", c:"#94a3b8" };
+    const tag         = raw.startsWith("KWCAF") ? { label:"CAF", bg:"rgba(20,20,20,.8)",    c:"#e2e8f0"  }
+                      : raw.startsWith("KWWCH") ? { label:"WCH", bg:"rgba(185,28,28,.25)",  c:"#fca5a5"  }
+                      : raw.startsWith("KWHAP") ? { label:"HAP", bg:"rgba(6,182,212,.18)",  c:"#22d3ee"  }
+                      :                           { label:"???", bg:"rgba(100,116,139,.2)", c:"#94a3b8"  };
 
-    return \`<div class="branch-row" style="border-left-color:\${color};animation-delay:\${i * 30}ms">
-      <div class="branch-num">\${String(i + 1).padStart(2, "0")}</div>
-      <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0">
-        <span style="font-size:10px;font-weight:800;padding:2px 7px;border-radius:5px;background:\${tag.bg};color:\${tag.c};flex-shrink:0;letter-spacing:.04em">\${tag.label}</span>
-        <div class="branch-name">\${displayName}</div>
-      </div>
-      <div class="branch-ref">\${ref}</div>
-      <div class="branch-status \${isActive ? "status-active" : "status-inactive"}">
-        \${isActive ? "Active" : "Inactive"}
-      </div>
-    </div>\`;
+    return '<div class="branch-row" style="border-left-color:' + color + ';animation-delay:' + (i * 30) + 'ms;opacity:' + (isActive ? '1' : '.4') + '">'
+      + '<div class="branch-num">' + String(i + 1).padStart(2, "0") + '</div>'
+      + '<div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0">'
+      + '<span style="font-size:10px;font-weight:800;padding:2px 8px;border-radius:5px;background:' + tag.bg + ';color:' + tag.c + ';flex-shrink:0;letter-spacing:.04em">' + tag.label + '</span>'
+      + '<div class="branch-name">' + displayName + '</div>'
+      + '</div>'
+      + '<div class="branch-ref">' + ref + '</div>'
+      + '<div class="branch-status ' + (isActive ? "status-active" : "status-inactive") + '">' + (isActive ? "Active" : "Closed") + '</div>'
+      + '</div>';
   }).join("");
 }
 

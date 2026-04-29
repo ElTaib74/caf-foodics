@@ -6,698 +6,750 @@
 <title>CAF · Foodics Live</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg:#0f172a; --card:#1e293b; --card2:#162032; --input:#1e293b;
-  --border:#334155; --borderHi:#475569;
-  --text:#e2e8f0; --muted:#94a3b8; --label:#64748b;
-  --cyan:#00d4ff; --green:#22c55e; --red:#ef4444; --yellow:#fbbf24;
-  --blue:#3b82f6; --purple:#8b5cf6; --orange:#f97316; --teal:#14b8a6;
-  --pink:#e879f9; --lime:#84cc16;
-  --font:'DM Sans',system-ui,sans-serif; --mono:'DM Mono',monospace;
-}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased}
-::-webkit-scrollbar{width:5px;height:5px}
-::-webkit-scrollbar-thumb{background:var(--borderHi);border-radius:99px}
-@keyframes spin{to{transform:rotate(360deg)}}
-@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+  :root {
+    --bg:      #0f172a;
+    --card:    #1e293b;
+    --card2:   #162032;
+    --border:  #334155;
+    --borderHi:#475569;
+    --text:    #e2e8f0;
+    --muted:   #94a3b8;
+    --label:   #64748b;
+    --cyan:    #00d4ff;
+    --green:   #22c55e;
+    --red:     #ef4444;
+    --blue:    #3b82f6;
+    --yellow:  #fbbf24;
+    --font:    'DM Sans', system-ui, sans-serif;
+    --mono:    'DM Mono', monospace;
+  }
 
-/* ── LOGIN ── */
-#pg-login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-.login-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:44px 40px;width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,.5);animation:fadeIn .4s}
-.logo-mark{width:56px;height:56px;border-radius:14px;background:var(--text);color:var(--card);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;letter-spacing:-.5px;margin:0 auto 12px}
-.field{margin-bottom:14px}
-.field label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em}
-.field input{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:11px 14px;font-size:14px;color:var(--text);font-family:var(--font);outline:none;transition:border-color .15s}
-.field input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,212,255,.1)}
-.btn-blue{width:100%;background:var(--blue);color:#fff;border:none;border-radius:10px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:var(--font);margin-top:6px;transition:opacity .15s;display:flex;align-items:center;justify-content:center;gap:8px}
-.btn-blue:hover{opacity:.88}.btn-blue:disabled{opacity:.45;cursor:not-allowed}
-.l-err{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--red);margin-top:12px;display:none;text-align:center}
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+  ::-webkit-scrollbar { width: 5px; } ::-webkit-scrollbar-thumb { background: var(--borderHi); border-radius: 99px; }
 
-/* ── HEADER ── */
-#hdr{position:sticky;top:0;z-index:100;background:var(--card);border-bottom:1px solid var(--border);padding:0 20px;height:56px;display:none;align-items:center;justify-content:space-between}
-.hdr-mark{width:34px;height:34px;border-radius:8px;background:var(--text);color:var(--card);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:12px;flex-shrink:0}
-.hdr-r{display:flex;align-items:center;gap:10px}
-.dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px rgba(34,197,94,.2);animation:spin 0s}
-.btn-sm{background:transparent;border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:11px;font-weight:600;cursor:pointer;color:var(--muted);font-family:var(--font);transition:all .15s}
-.btn-sm:hover{background:var(--card2);color:var(--text)}
-.btn-danger{border-color:rgba(239,68,68,.35);color:var(--red)}
+  @keyframes fadeIn  { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:none } }
+  @keyframes spin    { to { transform: rotate(360deg) } }
+  @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+  @keyframes pulse   { 0%,100%{opacity:1} 50%{opacity:.4} }
 
-/* ── DASHBOARD ── */
-#pg-dash{display:none;padding:16px 20px;max-width:1400px;margin:0 auto;animation:fadeIn .3s}
+  /* ── LOGIN PAGE ─────────────────────────────────────────── */
+  #page-login {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
 
-/* Control bar */
-.ctrl{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 18px;margin-bottom:12px;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:10px;box-shadow:0 4px 20px rgba(0,0,0,.3)}
-.ctrl-r{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.co-row{display:flex;border-radius:8px;overflow:hidden;border:1px solid var(--border)}
-.co-btn{padding:7px 16px;font-size:11px;font-weight:700;cursor:pointer;border:none;background:var(--card2);color:var(--muted);font-family:var(--font);transition:all .15s}
-.co-btn.on{background:var(--cyan);color:#0f172a}
-input[type=date]{border:1px solid var(--border);border-radius:8px;padding:7px 10px;font-size:12px;background:var(--input);color:var(--text);font-family:var(--font);color-scheme:dark;outline:none}
-.btn-cyan{background:var(--cyan);color:#0f172a;border:none;border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font);display:inline-flex;align-items:center;gap:6px;transition:opacity .15s}
-.btn-cyan:hover{opacity:.85}.btn-cyan:disabled{opacity:.45;cursor:not-allowed}
-.spinning{animation:spin .7s linear infinite;display:inline-block}
-.upd{font-size:10px;color:var(--green);font-family:var(--mono);display:none}
+  .login-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 44px 40px;
+    width: 100%;
+    max-width: 380px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.5);
+    animation: fadeIn .4s ease;
+  }
 
-/* Pills */
-.pills{display:flex;gap:6px;margin-bottom:12px}
-.pill{background:var(--card);border:1px solid var(--border);border-radius:99px;padding:5px 14px;font-size:11px;font-weight:600;cursor:pointer;color:var(--muted);font-family:var(--font);transition:all .15s}
-.pill.on{background:var(--cyan);color:#0f172a;border-color:var(--cyan)}
+  .login-logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 32px;
+    gap: 12px;
+  }
 
-/* Error */
-.err-bar{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:10px;padding:10px 14px;font-size:12px;color:var(--red);margin-bottom:10px;display:none}
+  .logo-mark {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: var(--text);
+    color: var(--card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 15px;
+    letter-spacing: -.5px;
+  }
 
-/* KPI Grid */
-.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:12px}
-@media(max-width:860px){.kpi-grid{grid-template-columns:1fr 1fr}}
-.kpi{border-radius:14px;padding:16px 18px;cursor:pointer;transition:transform .1s;box-shadow:0 4px 20px rgba(0,0,0,.3)}
-.kpi:active{transform:scale(.98)}
-.kpi-gold{background:linear-gradient(135deg,#f59e0b,#d97706);color:#1a1000}
-.kpi-dark{background:var(--card);border:1px solid var(--border)}
-.kpi-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;opacity:.75;margin-bottom:6px}
-.kpi-val{font-size:24px;font-weight:800;letter-spacing:-.03em;line-height:1.1;font-family:var(--mono)}
-.kpi-sub{font-size:10px;opacity:.65;margin-top:4px}
+  .login-title { font-size: 20px; font-weight: 800; text-align: center; letter-spacing: -.03em; }
+  .login-sub   { font-size: 12px; color: var(--muted); text-align: center; }
 
-/* 2-col */
-.two{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
-@media(max-width:900px){.two{grid-template-columns:1fr}}
+  .field { margin-bottom: 14px; }
+  .field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    margin-bottom: 6px;
+    letter-spacing: .03em;
+    text-transform: uppercase;
+  }
+  .field input {
+    width: 100%;
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 11px 14px;
+    font-size: 14px;
+    color: var(--text);
+    font-family: var(--font);
+    outline: none;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .field input:focus {
+    border-color: var(--cyan);
+    box-shadow: 0 0 0 3px rgba(0,212,255,.12);
+  }
 
-/* Panel */
-.panel{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.3)}
-.ph{padding:13px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
-.ph-title{font-weight:700;font-size:13px}
-.ph-sub{font-size:10px;color:var(--muted);margin-top:2px}
-.ph-badge{font-size:12px;font-weight:700;color:var(--cyan);font-family:var(--mono)}
+  .btn-primary {
+    width: 100%;
+    background: var(--blue);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: var(--font);
+    margin-top: 6px;
+    transition: opacity .15s, transform .1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .btn-primary:hover   { opacity: .88; }
+  .btn-primary:active  { transform: scale(.98); }
+  .btn-primary:disabled { opacity: .45; cursor: not-allowed; }
 
-/* Branch table */
-.col-hds{display:flex;padding:6px 18px 6px 50px;border-bottom:1px solid var(--border);background:rgba(255,255,255,.02)}
-.col-hd{text-align:right;font-size:9px;font-weight:700;color:var(--label);flex-shrink:0;text-transform:uppercase;letter-spacing:.04em}
-.brow{display:flex;align-items:center;padding:10px 18px;border-bottom:1px solid var(--border);border-left:3px solid transparent;transition:background .15s;gap:10px}
-.brow:last-child{border-bottom:none}.brow:hover{background:rgba(255,255,255,.03)}
-.bnum{font-size:11px;font-weight:700;color:var(--label);width:22px;flex-shrink:0;font-family:var(--mono)}
-.bname{font-size:12px;font-weight:600;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.bval{text-align:right;font-size:11px;flex-shrink:0;font-family:var(--mono);font-variant-numeric:tabular-nums}
-.bscroll{overflow-y:auto;max-height:400px}
-.tag{font-size:9px;font-weight:800;padding:2px 7px;border-radius:5px;flex-shrink:0;letter-spacing:.04em}
+  .login-err {
+    background: rgba(239,68,68,.1);
+    border: 1px solid rgba(239,68,68,.3);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: var(--red);
+    margin-top: 12px;
+    display: none;
+    text-align: center;
+  }
 
-/* Products */
-.prow{padding:9px 18px;border-bottom:1px solid var(--border);transition:background .15s}
-.prow:last-child{border-bottom:none}.prow:hover{background:rgba(255,255,255,.03)}
-.pbar-bg{height:3px;background:var(--border);border-radius:99px;margin-top:5px}
-.pbar{height:3px;border-radius:99px}
+  .login-footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 11px;
+    color: var(--label);
+  }
 
-/* Trend chart */
-.tchart{display:flex;align-items:flex-end;gap:5px;height:110px;padding:0 18px}
-.tcol{display:flex;flex-direction:column;align-items:center;flex:1;gap:3px;height:100%}
-.tbar{width:100%;border-radius:4px 4px 0 0;min-height:3px;opacity:.75;transition:opacity .2s}
-.tbar:hover{opacity:1}
-.tlbl{font-size:9px;color:var(--muted);white-space:nowrap}
-.tval{font-size:9px;color:var(--muted);font-family:var(--mono)}
+  /* ── CONNECTED PAGE ─────────────────────────────────────── */
+  #page-connected { display: none; animation: fadeIn .4s ease; }
 
-/* Channels */
-.crow{display:flex;align-items:center;padding:11px 18px;border-bottom:1px solid var(--border);gap:10px}
-.crow:last-child{border-bottom:none}
-.cbar-bg{flex:1;height:5px;background:var(--border);border-radius:99px;overflow:hidden}
-.cbar{height:5px;border-radius:99px}
+  /* Header */
+  .hdr {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
 
-/* Skeleton */
-.skel{background:linear-gradient(90deg,var(--card2) 25%,var(--borderHi) 50%,var(--card2) 75%);background-size:200% 100%;animation:shimmer 1.4s ease infinite;border-radius:4px}
-.empty{padding:32px;text-align:center;color:var(--muted);font-size:12px}
+  .hdr-left  { display: flex; align-items: center; gap: 12px; }
+  .hdr-mark  { width: 36px; height: 36px; border-radius: 9px; background: var(--text); color: var(--card); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 12px; flex-shrink: 0; }
+  .hdr-name  { font-weight: 700; font-size: 15px; letter-spacing: -.02em; }
+  .hdr-sub   { font-size: 10px; color: var(--muted); margin-top: 1px; }
+  .hdr-right { display: flex; align-items: center; gap: 10px; }
 
-/* Mode pills */
-.mpill{padding:4px 10px;border-radius:99px;font-size:10px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:var(--font);transition:all .15s}
-.mpill.on{background:var(--cyan);color:#0f172a;border-color:var(--cyan)}
+  .status-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 0 3px rgba(34,197,94,.2);
+    animation: pulse 2s infinite;
+  }
+  .status-dot.err { background: var(--red); box-shadow: 0 0 0 3px rgba(239,68,68,.2); }
+
+  .status-text { font-size: 11px; color: var(--muted); font-family: var(--mono); }
+
+  .btn-sm {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--muted);
+    font-family: var(--font);
+    transition: all .15s;
+  }
+  .btn-sm:hover { background: var(--card2); color: var(--text); }
+  .btn-sm.danger { border-color: rgba(239,68,68,.35); color: var(--red); }
+
+  /* Main content */
+  .main { padding: 24px; max-width: 1200px; margin: 0 auto; }
+
+  /* Connection status card */
+  .conn-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 14px;
+    box-shadow: 0 4px 20px rgba(0,0,0,.3);
+  }
+
+  .conn-info { display: flex; align-items: center; gap: 14px; }
+  .conn-icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: rgba(34,197,94,.1);
+    border: 1px solid rgba(34,197,94,.25);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+  }
+  .conn-title { font-weight: 700; font-size: 15px; }
+  .conn-sub   { font-size: 12px; color: var(--muted); margin-top: 2px; font-family: var(--mono); }
+
+  .conn-stats { display: flex; gap: 20px; flex-wrap: wrap; }
+  .stat-box   { text-align: center; }
+  .stat-val   { font-size: 22px; font-weight: 800; letter-spacing: -.03em; font-family: var(--mono); }
+  .stat-lbl   { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-top: 2px; }
+
+  /* Company tabs */
+  .co-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .co-tab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 18px;
+    cursor: pointer;
+    transition: all .15s;
+    font-family: var(--font);
+  }
+  .co-tab:hover { border-color: var(--borderHi); }
+  .co-tab.active {
+    border-color: var(--cyan);
+    background: rgba(0,212,255,.08);
+  }
+  .co-tab-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--cyan);
+  }
+  .co-tab-dot.wch { background: var(--yellow); }
+  .co-tab-name  { font-size: 13px; font-weight: 700; }
+  .co-tab-count { font-size: 11px; color: var(--muted); font-family: var(--mono); }
+
+  /* Branch list */
+  .branch-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,.3);
+  }
+
+  .branch-hdr {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .branch-hdr-title { font-weight: 700; font-size: 14px; }
+  .branch-hdr-badge {
+    background: rgba(0,212,255,.1);
+    border: 1px solid rgba(0,212,255,.25);
+    border-radius: 99px;
+    padding: 3px 12px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--cyan);
+    font-family: var(--mono);
+  }
+
+  .branch-row {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    border-bottom: 1px solid rgba(51,65,85,.5);
+    border-left: 3px solid transparent;
+    transition: background .15s;
+    gap: 14px;
+    animation: fadeIn .3s ease both;
+  }
+  .branch-row:last-child { border-bottom: none; }
+  .branch-row:hover { background: rgba(255,255,255,.03); }
+
+  .branch-num {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--label);
+    width: 22px;
+    flex-shrink: 0;
+    font-family: var(--mono);
+  }
+  .branch-name {
+    font-size: 13px;
+    font-weight: 600;
+    flex: 1;
+    min-width: 0;
+  }
+  .branch-ref {
+    font-size: 11px;
+    color: var(--muted);
+    font-family: var(--mono);
+    flex-shrink: 0;
+  }
+  .branch-status {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 99px;
+    flex-shrink: 0;
+  }
+  .status-active   { background: rgba(34,197,94,.12); color: var(--green); }
+  .status-inactive { background: rgba(148,163,184,.1); color: var(--muted); }
+
+  /* Loading skeleton */
+  .skel {
+    height: 14px;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--card2) 25%, var(--borderHi) 50%, var(--card2) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s ease infinite;
+    margin-bottom: 8px;
+  }
+
+  /* Next step banner */
+  .next-step {
+    margin-top: 20px;
+    background: rgba(0,212,255,.06);
+    border: 1px solid rgba(0,212,255,.2);
+    border-radius: 14px;
+    padding: 18px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .next-step-txt { font-size: 13px; color: var(--muted); }
+  .next-step-txt strong { color: var(--text); }
 </style>
 </head>
 <body>
 
-<!-- ══ LOGIN ═══════════════════════════════════════════════ -->
-<div id="pg-login">
+<!-- ════════════════════════════════════════
+     LOGIN PAGE
+════════════════════════════════════════ -->
+<div id="page-login">
   <div class="login-card">
-    <div class="logo-mark">CAF</div>
-    <div style="text-align:center;margin-bottom:28px">
-      <div style="font-weight:800;font-size:18px">Foodics Live Dashboard</div>
-      <div style="font-size:12px;color:var(--muted);margin-top:4px">CAF & WACHAMEAN · Kuwait 2026</div>
+    <div class="login-logo">
+      <div class="logo-mark">CAF</div>
+      <div>
+        <div class="login-title">Foodics Live Dashboard</div>
+        <div class="login-sub">CAF &amp; WACHAMEAN · Kuwait 2026</div>
+      </div>
     </div>
-    <div class="field"><label>Username</label><input id="lu" placeholder="Enter username" autocomplete="username"></div>
-    <div class="field"><label>Password</label><input id="lp" type="password" placeholder="Enter password" autocomplete="current-password"></div>
-    <div class="l-err" id="lerr"></div>
-    <button class="btn-blue" id="lbtn" onclick="doLogin()"><span id="lbtntxt">Sign In</span></button>
-    <div style="text-align:center;margin-top:18px;font-size:11px;color:var(--label)">CAF Financial Intelligence · Kuwait 2026</div>
+
+    <div class="field">
+      <label>Username</label>
+      <input id="l-user" type="text" placeholder="Enter username" autocomplete="username">
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input id="l-pass" type="password" placeholder="Enter password" autocomplete="current-password">
+    </div>
+
+    <button class="btn-primary" id="login-btn" onclick="doLogin()">
+      <span id="login-btn-txt">Sign In</span>
+    </button>
+
+    <div class="login-err" id="login-err"></div>
+    <div class="login-footer">CAF Financial Intelligence · Kuwait 2026</div>
   </div>
 </div>
 
-<!-- ══ HEADER ══════════════════════════════════════════════ -->
-<div id="hdr">
-  <div style="display:flex;align-items:center;gap:10px">
-    <div class="hdr-mark">CAF</div>
-    <div>
-      <div style="font-weight:700;font-size:14px;letter-spacing:-.02em">CAF &amp; WACHAMEAN · Foodics Live</div>
-      <div style="font-size:10px;color:var(--muted)">Live Operations · Kuwait 2026</div>
+
+<!-- ════════════════════════════════════════
+     CONNECTED PAGE
+════════════════════════════════════════ -->
+<div id="page-connected">
+
+  <!-- Header -->
+  <div class="hdr">
+    <div class="hdr-left">
+      <div class="hdr-mark">CAF</div>
+      <div>
+        <div class="hdr-name">CAF &amp; WACHAMEAN · Foodics Live</div>
+        <div class="hdr-sub">Live Operations · Kuwait 2026</div>
+      </div>
+    </div>
+    <div class="hdr-right">
+      <div class="status-dot" id="conn-dot"></div>
+      <span class="status-text" id="conn-text">Connected</span>
+      <button class="btn-sm danger" onclick="doLogout()">⏻ Sign Out</button>
     </div>
   </div>
-  <div class="hdr-r">
-    <div class="dot"></div>
-    <span style="font-size:11px;color:var(--muted);font-family:var(--mono)">Connected</span>
-    <button class="btn-sm btn-danger" onclick="doLogout()">⏻ Sign Out</button>
+
+  <!-- Main -->
+  <div class="main">
+
+    <!-- Connection status card -->
+    <div class="conn-card">
+      <div class="conn-info">
+        <div class="conn-icon">🔗</div>
+        <div>
+          <div class="conn-title">Foodics API · Connected</div>
+          <div class="conn-sub" id="biz-ref">Loading business info…</div>
+        </div>
+      </div>
+      <div class="conn-stats">
+        <div class="stat-box">
+          <div class="stat-val" id="stat-total-branches">—</div>
+          <div class="stat-lbl">Total Branches</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" style="color:var(--cyan)" id="stat-caf">—</div>
+          <div class="stat-lbl">CAF</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" style="color:var(--yellow)" id="stat-wch">—</div>
+          <div class="stat-lbl">WACHAMEAN</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Company tabs -->
+    <div class="co-tabs">
+      <div class="co-tab active" id="tab-caf" onclick="switchCo('CAF')">
+        <div class="co-tab-dot"></div>
+        <div>
+          <div class="co-tab-name">CAF</div>
+          <div class="co-tab-count" id="tab-caf-count">— branches</div>
+        </div>
+      </div>
+      <div class="co-tab" id="tab-wch" onclick="switchCo('WACHAMEAN')">
+        <div class="co-tab-dot wch"></div>
+        <div>
+          <div class="co-tab-name">WACHAMEAN & HAP</div>
+          <div class="co-tab-count" id="tab-wch-count">— branches</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Branch list -->
+    <div class="branch-card">
+      <div class="branch-hdr">
+        <div class="branch-hdr-title" id="branch-list-title">Branches</div>
+        <div class="branch-hdr-badge" id="branch-list-badge">—</div>
+      </div>
+      <div id="branch-list">
+        <!-- skeleton -->
+        <div style="padding:16px 20px">
+          <div class="skel" style="width:60%"></div>
+          <div class="skel" style="width:80%"></div>
+          <div class="skel" style="width:50%"></div>
+          <div class="skel" style="width:75%"></div>
+          <div class="skel" style="width:65%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Next step banner -->
+    <div class="next-step">
+      <div class="next-step-txt">
+        ✅ <strong>Step 1 complete.</strong>
+        Foodics is connected and branch data is flowing.
+        Next → we build the <strong>KPI cards</strong> (Day Sales · MTD · YTD · Avg/Order).
+      </div>
+    </div>
+
   </div>
 </div>
 
-<!-- ══ DASHBOARD ═══════════════════════════════════════════ -->
-<div id="pg-dash">
-
-  <!-- Control bar -->
-  <div class="ctrl">
-    <div>
-      <div style="font-weight:700;font-size:16px;letter-spacing:-.02em">≡ Live Dashboard</div>
-      <div id="bcount" style="font-size:10px;color:var(--muted);margin-top:2px">Loading…</div>
-    </div>
-    <div class="ctrl-r">
-      <div class="co-row">
-        <button class="co-btn on" id="co-caf" onclick="setCo('CAF')">CAF</button>
-        <button class="co-btn"    id="co-wch" onclick="setCo('WACHAMEAN')">WACHAMEAN &amp; HAP</button>
-      </div>
-      <input type="date" id="dsel" onchange="onDateChg()">
-      <button class="btn-cyan" id="rbtn" onclick="loadAll()">
-        <span id="rico">⟳</span> Refresh
-      </button>
-      <span class="upd" id="upd"></span>
-    </div>
-  </div>
-
-  <!-- Date pills -->
-  <div class="pills">
-    <button class="pill on"  id="pt" onclick="setQ('today')">Today</button>
-    <button class="pill"     id="py" onclick="setQ('yesterday')">Yesterday</button>
-    <button class="pill"     id="p7" onclick="setQ('7days')">Last 7 days</button>
-  </div>
-
-  <div class="err-bar" id="errbar"></div>
-
-  <!-- ── KPIs ── -->
-  <div class="kpi-grid">
-    <div class="kpi kpi-gold">
-      <div class="kpi-lbl">📅 Day Sales</div>
-      <div class="kpi-val" id="k-day">—</div>
-      <div class="kpi-sub" id="k-day-sub">loading…</div>
-    </div>
-    <div class="kpi kpi-dark">
-      <div class="kpi-lbl" style="color:var(--muted)">📆 MTD Sales</div>
-      <div class="kpi-val" style="color:var(--green)" id="k-mtd">—</div>
-      <div class="kpi-sub" style="color:var(--muted)" id="k-mtd-sub">loading…</div>
-    </div>
-    <div class="kpi kpi-dark">
-      <div class="kpi-lbl" style="color:var(--muted)">📊 YTD Sales</div>
-      <div class="kpi-val" style="color:var(--blue)" id="k-ytd">—</div>
-      <div class="kpi-sub" style="color:var(--muted)" id="k-ytd-sub">loading…</div>
-    </div>
-    <div class="kpi kpi-dark">
-      <div class="kpi-lbl" style="color:var(--muted)">⚡ Avg / Order</div>
-      <div class="kpi-val" style="color:var(--yellow)" id="k-aov">—</div>
-      <div class="kpi-sub" style="color:var(--muted)" id="k-aov-sub">avg per order</div>
-    </div>
-  </div>
-
-  <!-- ── Branches + Products ── -->
-  <div class="two">
-
-    <!-- Branches -->
-    <div class="panel">
-      <div class="ph">
-        <div>
-          <div class="ph-title">🏆 Branch Sales</div>
-          <div class="ph-sub">Orders · Day KD · MTD · YTD · vs Yesterday</div>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <button id="closed-toggle" onclick="toggleClosed()" style="font-size:11px;font-weight:700;padding:4px 12px;border-radius:8px;border:1px solid rgba(148,163,184,.2);background:rgba(148,163,184,.1);color:#94a3b8;cursor:pointer;font-family:inherit;transition:all .15s">Closed</button>
-          <div class="ph-badge" id="b-badge">—</div>
-        </div>
-      </div>
-      <div class="col-hds">
-        <div class="col-hd" style="width:52px">Orders</div>
-        <div class="col-hd" style="width:82px">Day KD</div>
-        <div class="col-hd" style="width:74px">MTD</div>
-        <div class="col-hd" style="width:74px">YTD</div>
-        <div class="col-hd" style="width:62px">vs Yest</div>
-      </div>
-      <div class="bscroll" id="b-list">
-        <div style="padding:16px 18px"><div class="skel" style="height:12px;margin-bottom:10px"></div><div class="skel" style="height:12px;margin-bottom:10px"></div><div class="skel" style="height:12px"></div></div>
-      </div>
-    </div>
-
-    <!-- Products -->
-    <div class="panel">
-      <div class="ph">
-        <div>
-          <div class="ph-title">⭐ Top Products</div>
-          <div class="ph-sub" id="p-sub">By quantity</div>
-        </div>
-        <div style="display:flex;gap:5px">
-          <button class="mpill on" id="p-qty" onclick="setPM('qty')">Qty</button>
-          <button class="mpill"    id="p-rev" onclick="setPM('revenue')">Revenue</button>
-        </div>
-      </div>
-      <div style="overflow-y:auto;max-height:400px" id="p-list">
-        <div style="padding:16px 18px"><div class="skel" style="height:12px;margin-bottom:10px"></div><div class="skel" style="height:12px;margin-bottom:10px"></div><div class="skel" style="height:12px"></div></div>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- ── Trend + Channels ── -->
-  <div class="two">
-
-    <!-- 7-day trend -->
-    <div class="panel">
-      <div class="ph">
-        <div class="ph-title">📈 7-Day Trend</div>
-        <div class="ph-badge" id="trend-total">—</div>
-      </div>
-      <div style="padding:14px 0 10px" id="trend-wrap">
-        <div class="empty">Loading…</div>
-      </div>
-    </div>
-
-    <!-- Channels -->
-    <div class="panel">
-      <div class="ph">
-        <div class="ph-title">📡 Order Channels</div>
-        <div class="ph-sub" id="ch-sub">Today's breakdown</div>
-      </div>
-      <div id="ch-list"><div class="empty">Loading…</div></div>
-    </div>
-
-  </div>
-
-</div><!-- /pg-dash -->
 
 <script>
-// ══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════
 // CONFIG
-// ══════════════════════════════════════════════════════════
-const TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI5MGQ1YTcxOC1lMzBkLTQ5ODYtODY0Ni0wNjdlZDBkMzdkMGUiLCJqdGkiOiJhMTVhOWJjYmQwZTM2MGI3MTk0Yzk3ZjI5Y2Q0ZjBkYjUzNzY2YzNjOTFlMjJjYjhjNDFmZmFjYzZlNWZiN2ZjOThlYmRmNDY1MTQzMTg0YSIsImlhdCI6MTc3NzI4MTQzNy4yODg2NjEsIm5iZiI6MTc3NzI4MTQzNy4yODg2NjEsImV4cCI6MTkzNTA0NzgzNi45MDA1MjMsInN1YiI6IjlhMDM4N2NlLWU2MmItNDY4Ni05Yzg3LWY1YjJmZTRhYjUwMiIsInNjb3BlcyI6WyJnZW5lcmFsLnJlYWQiLCJvcmRlcnMubGlzdCIsImNvdXBvbnMucmVhZCIsImN1c3RvbWVycy5hY2NvdW50cy5yZWFkIiwiY3VzdG9tZXJzLmxpc3QiLCJjdXN0b21lcnMubG95YWx0eS5yZWFkIiwiaW52ZW50b3J5LnRyYW5zYWN0aW9ucy5yZWFkIiwiaW52ZW50b3J5LnNldHRpbmdzLnJlYWQiLCJtZW51LmluZ3JlZGllbnRzLnJlYWQiXSwiYnVzaW5lc3MiOiI5YTAzODdjZS1mNjE4LTQ4NzYtOTYzMy05M2E2N2I3MTUwMjgiLCJyZWZlcmVuY2UiOiIzNjgzMzkifQ.xRILb0qEzG68HpJ3-HpdqkoFXFC-_S7sGgDF78ENx_q25fuWoQ3w0qrfAQnjnT7yqzqSKLWlNHsb80YoA272NskOVtGAqp91f_et461ZiIErPV0nSQ2mEO5ds21bDz_PoRPzYvDjkc18GGgM2jWq2-prQ8oiisxJDwD0d58nIYcfO_ehu5F5NtPjrAA0202ob-pJnI6OdapP47Nwnn7PgdfAJCBJ_6AtExMW4sQzTNHOn8F2WdZzevRuigZTj8u3SHY33T49nSZY75VZ9s-b2of5CQ3UsmZYjtxMsXr47K6UXFvY1357BwCGcTyBle_4MH8RKT1WBINioZfB5bY4GGluZAzH-bFtXlfgWh2Lp2rl5OWwIxVfX_ZwGetmSv6Ass7vg0GiTUZ_6HG8UMnAmkXNOM-hdmsQ7PyU6M-4jW_tEB8e6ttGX9EVmQA4dUZ2Skv9lP5MUyPCnnHsS4oNctStB30THly8aP5d3Lit6Ub6QDgDBgMUe29xNOsCfKvCxHjtwTuKnQLfwuW_u89BiFAGFCwGjNrzJEWpIDX5THvEQAuTgzUESw3CW-FuwduIOpHPlWzJ5wdweAQ7wvAaqiSYOqmQ_4ZGM-mJz-kgYvM-czt9UXgg_94Me0Xn8Uj-l-Sm086FT95OWyVNK1NcTvuqj0bsWvYBa_2BCCZ1YeQ";
-const USERS = { admin:"caf2026", operator:"caf_tool_2026" };
-const PREFIXES = { CAF:["KWCAF_","KWCAF "], WACHAMEAN:["KWWCH_","KWWCH ","KWHAP_","KWHAP "] };
-const BCOLS = ["#00d4ff","#8b5cf6","#14b8a6","#3b82f6","#e879f9","#f97316","#ef4444","#22c55e","#84cc16","#fbbf24"];
-const PCOLS = ["#00d4ff","#22c55e","#fbbf24","#ef4444","#8b5cf6","#e879f9","#f97316","#3b82f6","#84cc16","#14b8a6"];
-const CH = [
-  {key:"dine_in", label:"Dine-in",  icon:"🍽", color:"#00d4ff"},
-  {key:"talabat", label:"Talabat",  icon:"🛵", color:"#f97316"},
-  {key:"keeta",   label:"Keeta",    icon:"📦", color:"#22c55e"},
-  {key:"others",  label:"Others",   icon:"🔷", color:"#fbbf24"},
+// ═══════════════════════════════════════════════════
+const FOODICS_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI5MGQ1YTcxOC1lMzBkLTQ5ODYtODY0Ni0wNjdlZDBkMzdkMGUiLCJqdGkiOiJhMTVhOWJjYmQwZTM2MGI3MTk0Yzk3ZjI5Y2Q0ZjBkYjUzNzY2YzNjOTFlMjJjYjhjNDFmZmFjYzZlNWZiN2ZjOThlYmRmNDY1MTQzMTg0YSIsImlhdCI6MTc3NzI4MTQzNy4yODg2NjEsIm5iZiI6MTc3NzI4MTQzNy4yODg2NjEsImV4cCI6MTkzNTA0NzgzNi45MDA1MjMsInN1YiI6IjlhMDM4N2NlLWU2MmItNDY4Ni05Yzg3LWY1YjJmZTRhYjUwMiIsInNjb3BlcyI6WyJnZW5lcmFsLnJlYWQiLCJvcmRlcnMubGlzdCIsImNvdXBvbnMucmVhZCIsImN1c3RvbWVycy5hY2NvdW50cy5yZWFkIiwiY3VzdG9tZXJzLmxpc3QiLCJjdXN0b21lcnMubG95YWx0eS5yZWFkIiwiaW52ZW50b3J5LnRyYW5zYWN0aW9ucy5yZWFkIiwiaW52ZW50b3J5LnNldHRpbmdzLnJlYWQiLCJtZW51LmluZ3JlZGllbnRzLnJlYWQiXSwiYnVzaW5lc3MiOiI5YTAzODdjZS1mNjE4LTQ4NzYtOTYzMy05M2E2N2I3MTUwMjgiLCJyZWZlcmVuY2UiOiIzNjgzMzkifQ.xRILb0qEzG68HpJ3-HpdqkoFXFC-_S7sGgDF78ENx_q25fuWoQ3w0qrfAQnjnT7yqzqSKLWlNHsb80YoA272NskOVtGAqp91f_et461ZiIErPV0nSQ2mEO5ds21bDz_PoRPzYvDjkc18GGgM2jWq2-prQ8oiisxJDwD0d58nIYcfO_ehu5F5NtPjrAA0202ob-pJnI6OdapP47Nwnn7PgdfAJCBJ_6AtExMW4sQzTNHOn8F2WdZzevRuigZTj8u3SHY33T49nSZY75VZ9s-b2of5CQ3UsmZYjtxMsXr47K6UXFvY1357BwCGcTyBle_4MH8RKT1WBINioZfB5bY4GGluZAzH-bFtXlfgWh2Lp2rl5OWwIxVfX_ZwGetmSv6Ass7vg0GiTUZ_6HG8UMnAmkXNOM-hdmsQ7PyU6M-4jW_tEB8e6ttGX9EVmQA4dUZ2Skv9lP5MUyPCnnHsS4oNctStB30THly8aP5d3Lit6Ub6QDgDBgMUe29xNOsCfKvCxHjtwTuKnQLfwuW_u89BiFAGFCwGjNrzJEWpIDX5THvEQAuTgzUESw3CW-FuwduIOpHPlWzJ5wdweAQ7wvAaqiSYOqmQ_4ZGM-mJz-kgYvM-czt9UXgg_94Me0Xn8Uj-l-Sm086FT95OWyVNK1NcTvuqj0bsWvYBa_2BCCZ1YeQ";
+const BASE = "/api/foodics";
+
+// Dashboard login credentials
+const USERS = {
+  "admin":    "caf2026",
+  "operator": "caf_tool_2026",
+};
+
+// Branch name prefixes per brand
+const BRAND_PREFIXES = {
+  CAF:       ["KWCAF_","KWCAF "],
+  WACHAMEAN: ["KWWCH_","KWWCH ","KWHAP_","KWHAP "],
+};
+
+// Branch accent colors
+const BRANCH_COLORS = [
+  "#00d4ff","#8b5cf6","#14b8a6","#3b82f6","#e879f9",
+  "#f97316","#ef4444","#22c55e","#84cc16","#fbbf24",
 ];
-const CH_KEYS = {talabat:["talabat"], keeta:["keeta"], others:["jahez","deliveroo","v-thru","drive thru","coffee app"]};
 
-// ══ STATE ══
-let co = "CAF", date = todayStr(), prodMode = "qty";
-let allBranches = [], todayD = null, totalsD = null, weekD = [];
+// ═══════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════
+let allBranches = [];   // raw from Foodics
+let currentCo   = "CAF";
 
-// ══ UTILS ══
-function todayStr(){ return new Date().toISOString().slice(0,10) }
-function yestStr(){ const d=new Date(); d.setDate(d.getDate()-1); return d.toISOString().slice(0,10) }
-function addDays(s,n){ const d=new Date(s+"T12:00:00"); d.setDate(d.getDate()+n); return d.toISOString().slice(0,10) }
-function fmtD(s){ try{ return new Date(s+"T12:00:00").toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short",year:"numeric"}) }catch{ return s } }
-function KD(v){ if(v==null||isNaN(v))return"—"; return "KD "+Number(v).toLocaleString("en-US",{minimumFractionDigits:3,maximumFractionDigits:3}) }
-function KDk(v){ if(v==null||isNaN(v))return"—"; const n=Number(v); if(Math.abs(n)>=1e6)return"KD "+(n/1e6).toFixed(2)+"M"; if(Math.abs(n)>=1e3)return"KD "+(n/1e3).toFixed(1)+"K"; return"KD "+n.toFixed(3) }
+// ═══════════════════════════════════════════════════
+// AUTH
+// ═══════════════════════════════════════════════════
+function doLogin() {
+  const u = document.getElementById("l-user").value.trim();
+  const p = document.getElementById("l-pass").value;
+  const err = document.getElementById("login-err");
+  const btn = document.getElementById("login-btn");
+  const btnTxt = document.getElementById("login-btn-txt");
 
-function isBrand(name, brand){
-  const n=(name||"").toUpperCase();
-  return (PREFIXES[brand]||[]).some(p=>n.startsWith(p.toUpperCase()));
-}
-function cleanName(name, brand){
-  const n=(name||"").trim();
-  for(const p of (PREFIXES[brand]||[])){
-    if(n.toUpperCase().startsWith(p.toUpperCase()))
-      return n.slice(p.length).replace(/^[_\-\s]+/,"").trim();
+  err.style.display = "none";
+
+  if (!u || !p) {
+    showLoginErr("Please enter username and password.");
+    return;
   }
-  return n;
-}
-function tagFor(name){
-  const r=(name||"").toUpperCase();
-  if(r.startsWith("KWCAF")) return {label:"CAF",bg:"rgba(20,20,20,.85)",  c:"#e2e8f0"};
-  if(r.startsWith("KWWCH")) return {label:"WCH",bg:"rgba(185,28,28,.25)", c:"#fca5a5"};
-  if(r.startsWith("KWHAP")) return {label:"HAP",bg:"rgba(6,182,212,.18)", c:"#22d3ee"};
-  return {label:"???",bg:"rgba(100,116,139,.2)",c:"#94a3b8"};
-}
-function classifyCh(pm, source){
-  // Try source field first (Foodics orders page shows Source column)
-  const s=(source||"").toLowerCase();
-  if(s.includes("talabat")) return "talabat";
-  if(s.includes("keeta"))   return "keeta";
-  if(s.includes("deliveroo")||s.includes("jahez")||s.includes("hungerstation")) return "others";
-  // Fallback to payment method name
-  const s=(source||"").toLowerCase();
-  if(s.includes("talabat")) return "talabat";
-  if(s.includes("keeta"))   return "keeta";
-  if(s.includes("deliveroo")||s.includes("jahez")) return "others";
-  const p=(pm||"").toLowerCase();
-  if(CH_KEYS.talabat.some(k=>p.includes(k))) return "talabat";
-  if(CH_KEYS.keeta.some(k=>p.includes(k)))   return "keeta";
-  if(CH_KEYS.others.some(k=>p.includes(k)))  return "others";
-  return "dine_in";
+
+  if (USERS[u] !== p) {
+    showLoginErr("Invalid username or password.");
+    return;
+  }
+
+  // Save session
+  sessionStorage.setItem("caf_fd_user", u);
+
+  // Show loading state
+  btn.disabled = true;
+  btnTxt.innerHTML = '<span style="animation:spin .6s linear infinite;display:inline-block">⟳</span> Connecting to Foodics…';
+
+  // Connect
+  connectFoodics();
 }
 
-// ══ AUTH ══
-function doLogin(){
-  const u=document.getElementById("lu").value.trim();
-  const p=document.getElementById("lp").value;
-  const err=document.getElementById("lerr");
-  err.style.display="none";
-  if(!u||!p){ err.textContent="Please enter username and password."; err.style.display="block"; return; }
-  if(USERS[u]!==p){ err.textContent="Invalid username or password."; err.style.display="block"; return; }
-  sessionStorage.setItem("caf_fd","1");
-  const btn=document.getElementById("lbtn");
-  btn.disabled=true;
-  document.getElementById("lbtntxt").innerHTML='<span style="animation:spin .6s linear infinite;display:inline-block">⟳</span> Connecting…';
-  connectAndBoot();
+function showLoginErr(msg) {
+  const el = document.getElementById("login-err");
+  el.textContent = msg;
+  el.style.display = "block";
 }
-document.getElementById("lp").addEventListener("keydown",e=>{ if(e.key==="Enter") doLogin(); });
-function doLogout(){ sessionStorage.removeItem("caf_fd"); location.reload(); }
 
-// ══ API ══
-async function apiGet(path, params={}){
-  const url=new URL(window.location.origin+"/api/foodics");
-  url.searchParams.set("path", path.replace(/^\//,""));
-  Object.entries(params).forEach(([k,v])=>{ if(v!=null) url.searchParams.set(k,v); });
-  const r=await fetch(url.toString(),{headers:{"Authorization":"Bearer "+TOKEN,"Accept":"application/json"}});
-  if(!r.ok){ const t=await r.text(); throw new Error("Foodics "+r.status+": "+t.slice(0,120)); }
+document.getElementById("l-pass").addEventListener("keydown", e => {
+  if (e.key === "Enter") doLogin();
+});
+
+function toggleClosed() {
+  window._showClosed = !window._showClosed;
+  renderBranches(currentCo);
+}
+
+function doLogout() {
+  sessionStorage.removeItem("caf_fd_user");
+  allBranches = [];
+  document.getElementById("page-connected").style.display = "none";
+  document.getElementById("page-login").style.display = "flex";
+  document.getElementById("login-btn").disabled = false;
+  document.getElementById("login-btn-txt").textContent = "Sign In";
+  document.getElementById("login-err").style.display = "none";
+  document.getElementById("l-pass").value = "";
+}
+
+// ═══════════════════════════════════════════════════
+// FOODICS API
+// ═══════════════════════════════════════════════════
+async function apiGet(path, params = {}) {
+  const url = new URL(window.location.origin + BASE);
+  url.searchParams.set("path", path.replace(/^\//, ""));
+  Object.entries(params).forEach(([k, v]) => {
+    if (v != null) url.searchParams.set(k, v);
+  });
+  const r = await fetch(url.toString(), {
+    headers: {
+      "Authorization": "Bearer " + FOODICS_TOKEN,
+      "Accept": "application/json",
+    }
+  });
+  if (!r.ok) {
+    const t = await r.text();
+    throw new Error("Foodics API " + r.status + ": " + t.slice(0, 150));
+  }
   return r.json();
 }
-async function apiAll(path, params={}){
-  let page=1, all=[];
-  while(true){
-    const d=await apiGet(path,{...params,page,per_page:50});
-    all=all.concat(d.data||[]);
-    if(!d.meta||page>=(d.meta.last_page||1)||page>=40) break;
+
+async function apiAll(path, params = {}) {
+  let page = 1, all = [];
+  while (true) {
+    const d = await apiGet(path, { ...params, page, per_page: 50 });
+    all = all.concat(d.data || []);
+    const meta = d.meta || {};
+    if (!meta.last_page || page >= meta.last_page || page >= 20) break;
     page++;
   }
   return all;
 }
-async function fetchOrders(from, to){
-  return apiAll("orders",{
-    "filter[business_date][gte]":from,
-    "filter[business_date][lte]":to,
-    "filter[status]":4,
-    
-  });
-}
 
-// ══ BOOT ══
-async function connectAndBoot(){
-  try{
-    allBranches = await apiAll("branches");
-    document.getElementById("pg-login").style.display="none";
-    document.getElementById("hdr").style.display="flex";
-    document.getElementById("pg-dash").style.display="block";
-    document.getElementById("dsel").value=date;
-    updPills();
-    loadAll();
-  }catch(e){
-    const btn=document.getElementById("lbtn");
-    btn.disabled=false;
-    document.getElementById("lbtntxt").textContent="Sign In";
-    const err=document.getElementById("lerr");
-    err.textContent="Connection failed: "+e.message;
-    err.style.display="block";
-  }
-}
+// ═══════════════════════════════════════════════════
+// CONNECT
+// ═══════════════════════════════════════════════════
+async function connectFoodics() {
+  try {
+    // 1. Fetch branches
+    allBranches = await apiAll("/branches");
 
-// ══ CONTROLS ══
-function setCo(c){
-  co=c;
-  document.getElementById("co-caf").classList.toggle("on",c==="CAF");
-  document.getElementById("co-wch").classList.toggle("on",c==="WACHAMEAN");
-  loadAll();
-}
-function onDateChg(){ date=document.getElementById("dsel").value; updPills(); loadAll(); }
-function setQ(id){
-  if(id==="today")     date=todayStr();
-  if(id==="yesterday") date=yestStr();
-  if(id==="7days")     date=todayStr();
-  document.getElementById("dsel").value=date;
-  updPills(); loadAll();
-}
-function updPills(){
-  document.getElementById("pt").classList.toggle("on",date===todayStr());
-  document.getElementById("py").classList.toggle("on",date===yestStr());
-}
-function setPM(m){
-  prodMode=m;
-  document.getElementById("p-qty").classList.toggle("on",m==="qty");
-  document.getElementById("p-rev").classList.toggle("on",m==="revenue");
-  renderProds();
-}
-function toggleClosed(){
-  window._showClosed=!window._showClosed;
-  renderBranches();
-}
+    // 2. Classify branches by brand
+    const cafBranches = allBranches.filter(b => isBrand(b.name, "CAF"));
+    const wchBranches = allBranches.filter(b => isBrand(b.name, "WACHAMEAN"));
 
-// ══ LOAD ALL ══
-async function loadAll(){
-  const btn=document.getElementById("rbtn");
-  const ico=document.getElementById("rico");
-  btn.disabled=true; ico.className="spinning";
-  hideErr();
-  try{
-    const yest     = yestStr();
-    const mtdFrom  = date.slice(0,7)+"-01";
-    const ytdFrom  = date.slice(0,4)+"-01-01";
-    const wkFrom   = addDays(date,-6);
+    // 3. Update UI stats
+    const wchOnly = allBranches.filter(b => (b.name||"").toUpperCase().startsWith("KWWCH"));
+    const hapOnly  = allBranches.filter(b => (b.name||"").toUpperCase().startsWith("KWHAP"));
+    document.getElementById("stat-total-branches").textContent = allBranches.length;
+    document.getElementById("stat-caf").textContent            = cafBranches.length;
+    document.getElementById("stat-wch").textContent            = wchBranches.length;
+    document.getElementById("tab-caf-count").textContent       = cafBranches.length + " branches";
+    document.getElementById("tab-wch-count").textContent       = wchOnly.length + " WCH · " + hapOnly.length + " HAP";
 
-    // Get brand branches
-    const brandBranches = allBranches.filter(b=>isBrand(b.name||"",co));
-
-    // Fetch orders for each branch in parallel (batched to avoid too many requests)
-    // We use reference field to identify branches - fetch all orders then tag by branch
-    // Strategy: fetch all orders for date range, Foodics orders API returns branch_id in some versions
-    // Since branch_id missing, we fetch per-branch using filter[branch_id]
-    // But that's too many API calls - instead fetch ALL orders and match via separate branch orders
-
-    // Optimized: fetch all orders (no branch filter), Foodics returns up to 50/page
-    // The reference field in branch matches branch reference in meta
-    const [dayOrds, yestOrds, mtdOrds, ytdOrds, wkOrds] = await Promise.all([
-      fetchOrders(date, date),
-      fetchOrders(yest, yest),
-      fetchOrders(mtdFrom, date),
-      fetchOrders(ytdFrom, date),
-      fetchOrders(wkFrom, date),
-    ]);
-
-    // All orders returned - no branch_id field available from this token
-    // Use ALL orders (no brand filter possible without branch_id)
-    // Tag each order with branch name using meta.foodics.device_id is not reliable
-    // Best approach: show all orders for business, toggle between brands
-    const fil = o => o; // include all - brand filter applied at render via branch name matching
-
-    todayD  = aggregate(dayOrds);
-    totalsD = {
-      mtd: sumAmt(mtdOrds), mtdCnt: mtdOrds.length,
-      ytd: sumAmt(ytdOrds), ytdCnt: ytdOrds.length,
-      yestByBranch: {},
-      mtdByBranch:  {},
-      ytdByBranch:  {},
-    };
-    weekD = [];
-    for(let i=0;i<7;i++){
-      const d=addDays(date,i-6);
-      const ords=wkOrds.filter(o=>(o.business_date||"").slice(0,10)===d);
-      weekD.push({date:d,total:sumAmt(ords),cnt:ords.length});
+    // 4. Business ref from token payload
+    try {
+      const payload = JSON.parse(atob(FOODICS_TOKEN.split(".")[1]));
+      document.getElementById("biz-ref").textContent =
+        "Business ref: " + (payload.reference || "—") +
+        " · Token expires: " + new Date(payload.exp * 1000).toLocaleDateString("en-GB");
+    } catch(_) {
+      document.getElementById("biz-ref").textContent = "Connected to Foodics API";
     }
 
-    renderAll();
-    const now=new Date();
-    const u=document.getElementById("upd");
-    u.style.display="inline";
-    u.textContent="● "+now.toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"});
-  }catch(e){
-    showErr(e.message);
-  }finally{
-    btn.disabled=false; ico.className="";
+    // 5. Show connected page
+    document.getElementById("page-login").style.display      = "none";
+    document.getElementById("page-connected").style.display  = "block";
+    document.getElementById("conn-dot").className            = "status-dot";
+    document.getElementById("conn-text").textContent         = "Connected";
+
+    // 6. Render default branch list (CAF)
+    renderBranches("CAF");
+
+  } catch (e) {
+    // Reset login button
+    document.getElementById("login-btn").disabled = false;
+    document.getElementById("login-btn-txt").textContent = "Sign In";
+    showLoginErr("❌ Foodics connection failed: " + e.message);
   }
 }
 
-function sumAmt(orders){ return orders.reduce((s,o)=>s+parseFloat(o.total_price||o.subtotal_price||0),0); }
-function branchName(o){
-  // Branch name comes directly in order as branch field (string or object)
-  if(typeof o.branch === 'string' && o.branch) return o.branch;
-  if(o.branch && o.branch.name) return o.branch.name;
-  // Try branch_id match against our loaded branches
-  if(o.branch_id){
-    const b=allBranches.find(b=>b.id===o.branch_id||b.reference===o.branch_id);
-    if(b) return b.name;
-  }
-  return "Unknown";
+// ═══════════════════════════════════════════════════
+// BRAND DETECTION
+// ═══════════════════════════════════════════════════
+function isBrand(name, brand) {
+  const n = (name || "").toUpperCase();
+  const prefixes = BRAND_PREFIXES[brand] || [];
+  return prefixes.some(p => n.startsWith(p.toUpperCase()));
 }
-function byBranch(orders){
-  const m={};
-  for(const o of orders){
-    const n=branchName(o);
-    m[n]=(m[n]||0)+parseFloat(o.total_price||0);
-  }
-  return m;
-}
-function aggregate(orders){
-  const bmap={}, pmap={};
-  const ch={dine_in:0,talabat:0,keeta:0,others:0};
-  const chCnt={dine_in:0,talabat:0,keeta:0,others:0};
-  for(const o of orders){
-    const amt=parseFloat(o.total_price||0);
-    const bn=branchName(o);
-    if(!bmap[bn]) bmap[bn]={name:bn,day:0,orders:0};
-    bmap[bn].day+=amt; bmap[bn].orders++;
-    // channel
-    const pays=o.order_payment_methods||o.payments||[];
-    const pmName=pays.length?((pays[0].payment_method||{}).name||pays[0].name||""):"";
-    const c=classifyCh(pmName, o.source||"");
-    ch[c]+=amt; chCnt[c]++;
-    // products
-    const items=o.order_products||o.products||[];
-    for(const item of items){
-      const pn=(item.product&&item.product.name)||item.name||"Unknown";
-      const qty=parseFloat(item.quantity||1);
-      const rev=parseFloat(item.total_price||item.price||0);
-      if(!pmap[pn]) pmap[pn]={name:pn,qty:0,revenue:0};
-      pmap[pn].qty+=qty; pmap[pn].revenue+=rev;
+
+function cleanName(name, brand) {
+  const n = (name || "").trim();
+  const prefixes = BRAND_PREFIXES[brand] || [];
+  for (const p of prefixes) {
+    if (n.toUpperCase().startsWith(p.toUpperCase())) {
+      return n.slice(p.length).replace(/^[_\-\s]+/, "").trim();
     }
   }
-  return {
-    total:sumAmt(orders), cnt:orders.length,
-    bcnt:Object.values(bmap).filter(b=>b.day>0).length,
-    branches:Object.values(bmap).sort((a,b)=>b.day-a.day),
-    prods:Object.values(pmap).sort((a,b)=>b.qty-a.qty).slice(0,15),
-    ch, chCnt,
-  };
+  return n;
 }
 
-// ══ RENDER ALL ══
-function renderAll(){
-  if(!todayD) return;
-  // KPIs
-  document.getElementById("bcount").textContent=todayD.bcnt+" active branches · "+fmtD(date);
-  document.getElementById("k-day").textContent=KDk(todayD.total);
-  document.getElementById("k-day-sub").textContent=todayD.cnt.toLocaleString()+" orders · "+fmtD(date);
-  document.getElementById("k-mtd").textContent=KDk(totalsD.mtd);
-  document.getElementById("k-mtd-sub").textContent="Since "+date.slice(0,7)+"-01 · "+totalsD.mtdCnt+" orders";
-  document.getElementById("k-ytd").textContent=KDk(totalsD.ytd);
-  document.getElementById("k-ytd-sub").textContent="Since "+date.slice(0,4)+"-01-01 · "+totalsD.ytdCnt+" orders";
-  const aov=todayD.cnt>0?todayD.total/todayD.cnt:0;
-  document.getElementById("k-aov").textContent=KD(aov);
-  document.getElementById("k-aov-sub").textContent="avg per order · "+todayD.cnt+" orders";
-  renderBranches();
-  renderProds();
-  renderTrend();
-  renderChannels();
+// ═══════════════════════════════════════════════════
+// RENDER BRANCHES
+// ═══════════════════════════════════════════════════
+function switchCo(co) {
+  currentCo = co;
+  document.getElementById("tab-caf").classList.toggle("active", co === "CAF");
+  document.getElementById("tab-wch").classList.toggle("active", co === "WACHAMEAN");
+  renderBranches(co);
 }
 
-function renderBranches(){
-  const el=document.getElementById("b-list");
-  if(!todayD) return;
-  const list=todayD.branches.filter(b=>isBrand(b.name,co));
-  const active=list.filter(b=>b.day>0);
-  const closed=list.filter(b=>b.day===0);
-  const show=window._showClosed?list:active;
-  document.getElementById("b-badge").textContent=KDk(todayD.total)+" total";
-  const btn=document.getElementById("closed-toggle");
-  if(btn){
-    btn.textContent=window._showClosed?"Hide Closed":"Closed ("+closed.length+")";
-    btn.style.background=window._showClosed?"rgba(239,68,68,.2)":"rgba(148,163,184,.1)";
-    btn.style.color=window._showClosed?"#f87171":"#94a3b8";
-    btn.style.borderColor=window._showClosed?"rgba(239,68,68,.4)":"rgba(148,163,184,.2)";
+function renderBranches(co) {
+  const list   = allBranches.filter(b => isBrand(b.name, co));
+  const el     = document.getElementById("branch-list");
+  const active = list.filter(b => b.is_active !== false);
+  const closed = list.filter(b => b.is_active === false);
+  const show   = window._showClosed ? list : active;
+
+  document.getElementById("branch-list-title").textContent =
+    (co === "CAF" ? "CAF" : "WACHAMEAN & HAP") + " Branches";
+  document.getElementById("branch-list-badge").textContent =
+    active.length + " active · " + closed.length + " closed";
+
+  const btn = document.getElementById("closed-toggle");
+  if (btn) {
+    btn.textContent   = window._showClosed ? "Hide Closed" : "Closed (" + closed.length + ")";
+    btn.style.background  = window._showClosed ? "rgba(239,68,68,.2)"    : "rgba(148,163,184,.1)";
+    btn.style.color       = window._showClosed ? "#f87171"               : "#94a3b8";
+    btn.style.borderColor = window._showClosed ? "rgba(239,68,68,.4)"    : "rgba(148,163,184,.2)";
   }
-  if(!show.length){
-    el.innerHTML='<div class="empty">No branch data for this date.</div>'; return;
+
+  if (!show.length) {
+    el.innerHTML = '<div style="padding:28px;text-align:center;color:var(--muted);font-size:13px">No branches found</div>';
+    return;
   }
-  el.innerHTML=show.map((b,i)=>{
-    const color=BCOLS[i%BCOLS.length];
-    const tag=tagFor(b.name);
-    const mtd=(totalsD.mtdByBranch||{})[b.name]||0;
-    const ytd=(totalsD.ytdByBranch||{})[b.name]||0;
-    const yv=(totalsD.yestByBranch||{})[b.name]||0;
-    const vs=yv>0?(b.day-yv)/yv*100:null;
-    const vsC=vs==null?"var(--muted)":vs>=0?"var(--green)":"var(--red)";
-    const vsT=vs==null?"—":(vs>=0?"↑":"↓")+Math.abs(vs).toFixed(1)+"%";
-    const dimmed=b.day===0?";opacity:.4":"";
-    return '<div class="brow" style="border-left-color:'+color+dimmed+'">'
-      +'<div class="bnum">'+String(i+1).padStart(2,"0")+'</div>'
-      +'<div style="display:flex;align-items:center;gap:7px;flex:1;min-width:0">'
-      +'<span class="tag" style="background:'+tag.bg+';color:'+tag.c+'">'+tag.label+'</span>'
-      +'<div class="bname">'+cleanName(b.name,co)+'</div>'
-      +'</div>'
-      +'<div class="bval" style="width:52px;font-weight:700;color:var(--text)">'+b.orders+'</div>'
-      +'<div class="bval" style="width:82px;font-weight:700;color:var(--text)">'+KD(b.day)+'</div>'
-      +'<div class="bval" style="width:74px;color:var(--muted)">'+( mtd>0?KDk(mtd):"—")+'</div>'
-      +'<div class="bval" style="width:74px;color:var(--muted)">'+( ytd>0?KDk(ytd):"—")+'</div>'
-      +'<div class="bval" style="width:62px;color:'+vsC+';font-weight:600">'+vsT+'</div>'
-      +'</div>';
+
+  el.innerHTML = show.map((b, i) => {
+    const displayName = cleanName(b.name, co);
+    const isActive    = b.is_active !== false;
+    const ref         = b.reference || b.id?.slice(0, 8) || "—";
+    const color       = BRANCH_COLORS[i % BRANCH_COLORS.length];
+    const raw         = (b.name || "").toUpperCase();
+    const tag         = raw.startsWith("KWCAF") ? { label:"CAF", bg:"rgba(20,20,20,.8)",    c:"#e2e8f0"  }
+                      : raw.startsWith("KWWCH") ? { label:"WCH", bg:"rgba(185,28,28,.25)",  c:"#fca5a5"  }
+                      : raw.startsWith("KWHAP") ? { label:"HAP", bg:"rgba(6,182,212,.18)",  c:"#22d3ee"  }
+                      :                           { label:"???", bg:"rgba(100,116,139,.2)", c:"#94a3b8"  };
+
+    return '<div class="branch-row" style="border-left-color:' + color + ';animation-delay:' + (i * 30) + 'ms;opacity:' + (isActive ? '1' : '.4') + '">'
+      + '<div class="branch-num">' + String(i + 1).padStart(2, "0") + '</div>'
+      + '<div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0">'
+      + '<span style="font-size:10px;font-weight:800;padding:2px 8px;border-radius:5px;background:' + tag.bg + ';color:' + tag.c + ';flex-shrink:0;letter-spacing:.04em">' + tag.label + '</span>'
+      + '<div class="branch-name">' + displayName + '</div>'
+      + '</div>'
+      + '<div class="branch-ref">' + ref + '</div>'
+      + '<div class="branch-status ' + (isActive ? "status-active" : "status-inactive") + '">' + (isActive ? "Active" : "Closed") + '</div>'
+      + '</div>';
   }).join("");
 }
 
-function renderProds(){
-  const el=document.getElementById("p-list");
-  if(!todayD||!todayD.prods.length){ el.innerHTML='<div class="empty">No product data for this date.</div>'; return; }
-  const sorted=[...todayD.prods].sort((a,b)=>b[prodMode]-a[prodMode]).slice(0,10);
-  const mx=sorted[0]?.[prodMode]||1;
-  el.innerHTML=sorted.map((p,i)=>{
-    const val=p[prodMode], pct=(val/mx*100).toFixed(1), c=PCOLS[i%PCOLS.length];
-    const dv=prodMode==="qty"?Math.round(val)+" pcs":KD(val);
-    return '<div class="prow">'
-      +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">'
-      +'<div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0">'
-      +'<span style="font-size:10px;font-weight:700;color:'+c+';width:20px;flex-shrink:0">#'+(i+1)+'</span>'
-      +'<div style="font-size:11px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;color:var(--text)">'+p.name+'</div>'
-      +'</div>'
-      +'<div style="font-size:11px;font-weight:700;font-family:var(--mono);margin-left:8px;flex-shrink:0;color:var(--text)">'+dv+'</div>'
-      +'</div>'
-      +'<div class="pbar-bg"><div class="pbar" style="width:'+pct+'%;background:'+c+'"></div></div>'
-      +'</div>';
-  }).join("");
+// ═══════════════════════════════════════════════════
+// INIT — restore session
+// ═══════════════════════════════════════════════════
+if (sessionStorage.getItem("caf_fd_user")) {
+  document.getElementById("login-btn").disabled = true;
+  document.getElementById("login-btn-txt").innerHTML =
+    '<span style="animation:spin .6s linear infinite;display:inline-block">⟳</span> Reconnecting…';
+  connectFoodics();
 }
-
-function renderTrend(){
-  const el=document.getElementById("trend-wrap");
-  if(!weekD.length){ el.innerHTML='<div class="empty">No trend data.</div>'; return; }
-  const mx=Math.max(...weekD.map(d=>d.total),1);
-  const tot=weekD.reduce((s,d)=>s+d.total,0);
-  document.getElementById("trend-total").textContent=KDk(tot)+" / 7 days";
-  const cols=weekD.map(d=>{
-    const pct=Math.max(d.total/mx*100,3).toFixed(1);
-    const isT=d.date===date;
-    const lbl=new Date(d.date+"T12:00:00").toLocaleDateString("en-GB",{weekday:"short"});
-    return '<div class="tcol">'
-      +'<div class="tval">'+KDk(d.total)+'</div>'
-      +'<div class="tbar" style="height:'+pct+'%;background:'+(isT?"var(--cyan)":"var(--blue)")+';opacity:'+(isT?1:.65)+'" title="'+d.date+': '+KD(d.total)+'"></div>'
-      +'<div class="tlbl">'+lbl+'</div>'
-      +'</div>';
-  }).join("");
-  el.innerHTML='<div class="tchart">'+cols+'</div>';
-}
-
-function renderChannels(){
-  const el=document.getElementById("ch-list");
-  if(!todayD){ el.innerHTML='<div class="empty">No channel data.</div>'; return; }
-  const tot=Object.values(todayD.ch).reduce((s,v)=>s+v,0);
-  document.getElementById("ch-sub").textContent=date+" breakdown";
-  el.innerHTML=CH.map(c=>{
-    const amt=todayD.ch[c.key]||0;
-    const cnt=todayD.chCnt[c.key]||0;
-    const pct=tot>0?(amt/tot*100).toFixed(1):0;
-    return '<div class="crow">'
-      +'<div style="font-size:14px;flex-shrink:0">'+c.icon+'</div>'
-      +'<div style="font-size:12px;font-weight:600;width:72px;flex-shrink:0;color:var(--text)">'+c.label+'</div>'
-      +'<div class="cbar-bg"><div class="cbar" style="width:'+pct+'%;background:'+c.color+'"></div></div>'
-      +'<div style="font-size:10px;color:var(--muted);width:32px;text-align:right;flex-shrink:0">'+pct+'%</div>'
-      +'<div style="font-size:11px;font-weight:700;font-family:var(--mono);width:80px;text-align:right;flex-shrink:0;color:var(--text)">'+KD(amt)+'</div>'
-      +'<div style="font-size:10px;color:var(--muted);width:48px;text-align:right;flex-shrink:0">'+cnt+' ord</div>'
-      +'</div>';
-  }).join("");
-}
-
-// ══ ERR ══
-function showErr(m){ const e=document.getElementById("errbar"); e.textContent="⚠ "+m; e.style.display="block"; }
-function hideErr(){ document.getElementById("errbar").style.display="none"; }
-
-// ══ INIT ══
-if(sessionStorage.getItem("caf_fd")==="1") connectAndBoot();
 </script>
 </body>
 </html>

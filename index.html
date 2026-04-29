@@ -339,7 +339,17 @@ function tagFor(name){
   if(r.startsWith("KWHAP")) return {label:"HAP",bg:"rgba(6,182,212,.18)", c:"#22d3ee"};
   return {label:"???",bg:"rgba(100,116,139,.2)",c:"#94a3b8"};
 }
-function classifyCh(pm){
+function classifyCh(pm, source){
+  // Try source field first (Foodics orders page shows Source column)
+  const s=(source||"").toLowerCase();
+  if(s.includes("talabat")) return "talabat";
+  if(s.includes("keeta"))   return "keeta";
+  if(s.includes("deliveroo")||s.includes("jahez")||s.includes("hungerstation")) return "others";
+  // Fallback to payment method name
+  const s=(source||"").toLowerCase();
+  if(s.includes("talabat")) return "talabat";
+  if(s.includes("keeta"))   return "keeta";
+  if(s.includes("deliveroo")||s.includes("jahez")) return "others";
   const p=(pm||"").toLowerCase();
   if(CH_KEYS.talabat.some(k=>p.includes(k))) return "talabat";
   if(CH_KEYS.keeta.some(k=>p.includes(k)))   return "keeta";
@@ -508,16 +518,15 @@ async function loadAll(){
 
 function sumAmt(orders){ return orders.reduce((s,o)=>s+parseFloat(o.total_price||o.subtotal_price||0),0); }
 function branchName(o){
-  // Try embedded branch
+  // Branch name comes directly in order as branch field (string or object)
+  if(typeof o.branch === 'string' && o.branch) return o.branch;
   if(o.branch && o.branch.name) return o.branch.name;
-  // Try branch_id match
+  // Try branch_id match against our loaded branches
   if(o.branch_id){
-    const b=allBranches.find(b=>b.id===o.branch_id);
+    const b=allBranches.find(b=>b.id===o.branch_id||b.reference===o.branch_id);
     if(b) return b.name;
   }
-  // Foodics orders API does not return branch info without include param
-  // We cannot determine branch from order alone - group as "All Branches"
-  return "All Orders";
+  return "Unknown";
 }
 function byBranch(orders){
   const m={};
@@ -539,7 +548,7 @@ function aggregate(orders){
     // channel
     const pays=o.order_payment_methods||o.payments||[];
     const pmName=pays.length?((pays[0].payment_method||{}).name||pays[0].name||""):"";
-    const c=classifyCh(pmName);
+    const c=classifyCh(pmName, o.source||"");
     ch[c]+=amt; chCnt[c]++;
     // products
     const items=o.order_products||o.products||[];

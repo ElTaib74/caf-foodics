@@ -454,7 +454,7 @@
       <div class="co-tab" id="tab-wch" onclick="switchCo('WACHAMEAN')">
         <div class="co-tab-dot wch"></div>
         <div>
-          <div class="co-tab-name">WACHAMEAN</div>
+          <div class="co-tab-name">WACHAMEAN & HAP</div>
           <div class="co-tab-count" id="tab-wch-count">— branches</div>
         </div>
       </div>
@@ -506,8 +506,14 @@ const USERS = {
 
 // Branch name prefixes per brand
 const BRAND_PREFIXES = {
-  CAF:       ["KWCAF","CAF"],
-  WACHAMEAN: ["KWWCH","WCH","WACHAMEAN"],
+  CAF:       ["KWCAF_","KWCAF "],
+  WACHAMEAN: ["KWWCH_","KWWCH ","KWHAP_","KWHAP "],
+};
+
+// Human-readable label per company
+const BRAND_LABEL = {
+  CAF:       "CAF",
+  WACHAMEAN: "WACHAMEAN & HAPPY ELLIE",
 };
 
 // Branch accent colors
@@ -623,11 +629,13 @@ async function connectFoodics() {
     const wchBranches = allBranches.filter(b => isBrand(b.name, "WACHAMEAN"));
 
     // 3. Update UI stats
+    const wchOnly = allBranches.filter(b => isBrand(b.name, "WACHAMEAN") && (b.name||"").toUpperCase().startsWith("KWWCH"));
+    const hapOnly  = allBranches.filter(b => isBrand(b.name, "WACHAMEAN") && (b.name||"").toUpperCase().startsWith("KWHAP"));
     document.getElementById("stat-total-branches").textContent = allBranches.length;
     document.getElementById("stat-caf").textContent            = cafBranches.length;
     document.getElementById("stat-wch").textContent            = wchBranches.length;
     document.getElementById("tab-caf-count").textContent       = cafBranches.length + " branches";
-    document.getElementById("tab-wch-count").textContent       = wchBranches.length + " branches";
+    document.getElementById("tab-wch-count").textContent       = wchOnly.length + " WCH · " + hapOnly.length + " HAP";
 
     // 4. Business ref from token payload
     try {
@@ -666,12 +674,12 @@ function isBrand(name, brand) {
 }
 
 function cleanName(name, brand) {
-  const n = name || "";
+  const n = (name || "").trim();
   const prefixes = BRAND_PREFIXES[brand] || [];
   for (const p of prefixes) {
-    // Remove prefix + separator (_, -, space)
-    const re = new RegExp("^" + p + "[_\\-\\s]?", "i");
-    if (re.test(n)) return n.replace(re, "").trim();
+    if (n.toUpperCase().startsWith(p.toUpperCase())) {
+      return n.slice(p.length).replace(/^[_\-\s]+/, "").trim();
+    }
   }
   return n;
 }

@@ -569,7 +569,8 @@ function toggleBev() {
 // FOODICS API
 // ══════════════════════════════════════════════════════════
 async function apiGet(path, params={}) {
-  const url=new URL(BASE+path);
+  const url=new URL(window.location.origin + "/api/foodics");
+  url.searchParams.set("path", path.replace(/^\//, ""));
   Object.entries(params).forEach(([k,v])=>{ if(v!=null) url.searchParams.set(k,v); });
   const r=await fetch(url.toString(), {
     headers:{ "Authorization":"Bearer "+FOODICS_TOKEN, "Accept":"application/json" }

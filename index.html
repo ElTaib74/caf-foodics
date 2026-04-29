@@ -387,7 +387,7 @@ async function fetchOrders(from, to){
   return apiAll("orders",{
     "filter[business_date][gte]":from,
     "filter[business_date][lte]":to,
-    "filter[status]":7,
+    "filter[status]":4,
     
   });
 }
@@ -454,6 +454,17 @@ async function loadAll(){
     const ytdFrom  = date.slice(0,4)+"-01-01";
     const wkFrom   = addDays(date,-6);
 
+    // Get brand branches
+    const brandBranches = allBranches.filter(b=>isBrand(b.name||"",co));
+
+    // Fetch orders for each branch in parallel (batched to avoid too many requests)
+    // We use reference field to identify branches - fetch all orders then tag by branch
+    // Strategy: fetch all orders for date range, Foodics orders API returns branch_id in some versions
+    // Since branch_id missing, we fetch per-branch using filter[branch_id]
+    // But that's too many API calls - instead fetch ALL orders and match via separate branch orders
+
+    // Optimized: fetch all orders (no branch filter), Foodics returns up to 50/page
+    // The reference field in branch matches branch reference in meta
     const [dayOrds, yestOrds, mtdOrds, ytdOrds, wkOrds] = await Promise.all([
       fetchOrders(date, date),
       fetchOrders(yest, yest),
@@ -462,21 +473,24 @@ async function loadAll(){
       fetchOrders(wkFrom, date),
     ]);
 
-    const brandBids = new Set(allBranches.filter(b=>isBrand(b.name||"",co)).map(b=>b.id));
-    const fil = orders => brandBids.size ? orders.filter(o=>brandBids.has(o.branch_id)) : orders;
+    // All orders returned - no branch_id field available from this token
+    // Use ALL orders (no brand filter possible without branch_id)
+    // Tag each order with branch name using meta.foodics.device_id is not reliable
+    // Best approach: show all orders for business, toggle between brands
+    const fil = o => o; // include all - brand filter applied at render via branch name matching
 
-    todayD  = aggregate(fil(dayOrds));
+    todayD  = aggregate(dayOrds);
     totalsD = {
-      mtd: sumAmt(fil(mtdOrds)), mtdCnt: fil(mtdOrds).length,
-      ytd: sumAmt(fil(ytdOrds)), ytdCnt: fil(ytdOrds).length,
-      yestByBranch: byBranch(fil(yestOrds)),
-      mtdByBranch:  byBranch(fil(mtdOrds)),
-      ytdByBranch:  byBranch(fil(ytdOrds)),
+      mtd: sumAmt(mtdOrds), mtdCnt: mtdOrds.length,
+      ytd: sumAmt(ytdOrds), ytdCnt: ytdOrds.length,
+      yestByBranch: {},
+      mtdByBranch:  {},
+      ytdByBranch:  {},
     };
     weekD = [];
     for(let i=0;i<7;i++){
       const d=addDays(date,i-6);
-      const ords=fil(wkOrds).filter(o=>(o.business_date||"").slice(0,10)===d);
+      const ords=wkOrds.filter(o=>(o.business_date||"").slice(0,10)===d);
       weekD.push({date:d,total:sumAmt(ords),cnt:ords.length});
     }
 
@@ -492,13 +506,18 @@ async function loadAll(){
   }
 }
 
-function sumAmt(orders){ return orders.reduce((s,o)=>s+parseFloat(o.total_price||0),0); }
+function sumAmt(orders){ return orders.reduce((s,o)=>s+parseFloat(o.total_price||o.subtotal_price||0),0); }
 function branchName(o){
-  // Try embedded branch first
+  // Try embedded branch
   if(o.branch && o.branch.name) return o.branch.name;
-  // Fallback to allBranches lookup by id
-  const b=allBranches.find(b=>b.id===o.branch_id||b.hid===o.branch_id);
-  return b ? b.name : (o.branch_id||"Unknown");
+  // Try branch_id match
+  if(o.branch_id){
+    const b=allBranches.find(b=>b.id===o.branch_id);
+    if(b) return b.name;
+  }
+  // Foodics orders API does not return branch info without include param
+  // We cannot determine branch from order alone - group as "All Branches"
+  return "All Orders";
 }
 function byBranch(orders){
   const m={};

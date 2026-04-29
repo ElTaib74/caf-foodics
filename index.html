@@ -657,7 +657,6 @@ async function fetchOrders(from, to) {
     "filter[business_date][gte]": from,
     "filter[business_date][lte]": to,
     
-    "include": "branch,orderProducts.product",
   });
 }
 

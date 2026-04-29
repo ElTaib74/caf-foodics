@@ -12,14 +12,13 @@ export default async function handler(req, res) {
   const path = (req.query.path || "").replace(/^\//, "");
   const params = { ...req.query };
   delete params.path;
-
   const qs = new URLSearchParams(params).toString();
   const authHeader = req.headers.authorization || "";
 
   try {
     const result = await new Promise((resolve, reject) => {
       const options = {
-        hostname: "api-beta.foodics.com",
+        hostname: "api.foodics.com",
         path: `/v5/${path}${qs ? "?" + qs : ""}`,
         method: "GET",
         headers: {
@@ -36,13 +35,13 @@ export default async function handler(req, res) {
           try {
             resolve({ status: response.statusCode, data: JSON.parse(body) });
           } catch (e) {
-            resolve({ status: response.statusCode, data: { error: body.slice(0, 200) } });
+            resolve({ status: response.statusCode, data: { raw: body.slice(0, 300) } });
           }
         });
       });
 
       request.on("error", (err) => reject(err));
-      request.setTimeout(25000, () => { request.destroy(); reject(new Error("Timeout")); });
+      request.setTimeout(25000, () => { request.destroy(); reject(new Error("Timeout after 25s")); });
       request.end();
     });
 

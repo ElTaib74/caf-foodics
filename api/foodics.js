@@ -1,5 +1,6 @@
+import https from "https";
+
 export default async function handler(req, res) {
-  // Allow all origins (your Vercel dashboard)
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
@@ -8,27 +9,45 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
-  // Build the Foodics URL from the incoming path + query
-  // e.g. /api/foodics/branches?per_page=50 → https://api-beta.foodics.com/v5/branches?per_page=50
-  const path = req.query.path || "";
+  const path = (req.query.path || "").replace(/^\//, "");
   const params = { ...req.query };
   delete params.path;
 
   const qs = new URLSearchParams(params).toString();
-  const foodicsUrl = `https://api-beta.foodics.com/v5/${path}${qs ? "?" + qs : ""}`;
+  const authHeader = req.headers.authorization || "";
 
   try {
-    const foodicsRes = await fetch(foodicsUrl, {
-      headers: {
-        Authorization: req.headers.authorization || "",
-        Accept: "application/json",
-      },
+    const result = await new Promise((resolve, reject) => {
+      const options = {
+        hostname: "api-beta.foodics.com",
+        path: `/v5/${path}${qs ? "?" + qs : ""}`,
+        method: "GET",
+        headers: {
+          Authorization: authHeader,
+          Accept: "application/json",
+          "User-Agent": "caf-dashboard/1.0",
+        },
+      };
+
+      const request = https.request(options, (response) => {
+        let body = "";
+        response.on("data", (chunk) => { body += chunk; });
+        response.on("end", () => {
+          try {
+            resolve({ status: response.statusCode, data: JSON.parse(body) });
+          } catch (e) {
+            resolve({ status: response.statusCode, data: { error: body.slice(0, 200) } });
+          }
+        });
+      });
+
+      request.on("error", (err) => reject(err));
+      request.setTimeout(25000, () => { request.destroy(); reject(new Error("Timeout")); });
+      request.end();
     });
 
-    const data = await foodicsRes.json();
-    return res.status(foodicsRes.status).json(data);
+    return res.status(result.status).json(result.data);
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }
 }
-

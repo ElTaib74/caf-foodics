@@ -1,2 +1,730 @@
-caf_foodics_step1.html
-  
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CAF · Foodics Live</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:      #0f172a;
+    --card:    #1e293b;
+    --card2:   #162032;
+    --border:  #334155;
+    --borderHi:#475569;
+    --text:    #e2e8f0;
+    --muted:   #94a3b8;
+    --label:   #64748b;
+    --cyan:    #00d4ff;
+    --green:   #22c55e;
+    --red:     #ef4444;
+    --blue:    #3b82f6;
+    --yellow:  #fbbf24;
+    --font:    'DM Sans', system-ui, sans-serif;
+    --mono:    'DM Mono', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+  ::-webkit-scrollbar { width: 5px; } ::-webkit-scrollbar-thumb { background: var(--borderHi); border-radius: 99px; }
+
+  @keyframes fadeIn  { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:none } }
+  @keyframes spin    { to { transform: rotate(360deg) } }
+  @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+  @keyframes pulse   { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+  /* ── LOGIN PAGE ─────────────────────────────────────────── */
+  #page-login {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .login-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 44px 40px;
+    width: 100%;
+    max-width: 380px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.5);
+    animation: fadeIn .4s ease;
+  }
+
+  .login-logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 32px;
+    gap: 12px;
+  }
+
+  .logo-mark {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: var(--text);
+    color: var(--card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 15px;
+    letter-spacing: -.5px;
+  }
+
+  .login-title { font-size: 20px; font-weight: 800; text-align: center; letter-spacing: -.03em; }
+  .login-sub   { font-size: 12px; color: var(--muted); text-align: center; }
+
+  .field { margin-bottom: 14px; }
+  .field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    margin-bottom: 6px;
+    letter-spacing: .03em;
+    text-transform: uppercase;
+  }
+  .field input {
+    width: 100%;
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 11px 14px;
+    font-size: 14px;
+    color: var(--text);
+    font-family: var(--font);
+    outline: none;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .field input:focus {
+    border-color: var(--cyan);
+    box-shadow: 0 0 0 3px rgba(0,212,255,.12);
+  }
+
+  .btn-primary {
+    width: 100%;
+    background: var(--blue);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: var(--font);
+    margin-top: 6px;
+    transition: opacity .15s, transform .1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .btn-primary:hover   { opacity: .88; }
+  .btn-primary:active  { transform: scale(.98); }
+  .btn-primary:disabled { opacity: .45; cursor: not-allowed; }
+
+  .login-err {
+    background: rgba(239,68,68,.1);
+    border: 1px solid rgba(239,68,68,.3);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: var(--red);
+    margin-top: 12px;
+    display: none;
+    text-align: center;
+  }
+
+  .login-footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 11px;
+    color: var(--label);
+  }
+
+  /* ── CONNECTED PAGE ─────────────────────────────────────── */
+  #page-connected { display: none; animation: fadeIn .4s ease; }
+
+  /* Header */
+  .hdr {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .hdr-left  { display: flex; align-items: center; gap: 12px; }
+  .hdr-mark  { width: 36px; height: 36px; border-radius: 9px; background: var(--text); color: var(--card); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 12px; flex-shrink: 0; }
+  .hdr-name  { font-weight: 700; font-size: 15px; letter-spacing: -.02em; }
+  .hdr-sub   { font-size: 10px; color: var(--muted); margin-top: 1px; }
+  .hdr-right { display: flex; align-items: center; gap: 10px; }
+
+  .status-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 0 3px rgba(34,197,94,.2);
+    animation: pulse 2s infinite;
+  }
+  .status-dot.err { background: var(--red); box-shadow: 0 0 0 3px rgba(239,68,68,.2); }
+
+  .status-text { font-size: 11px; color: var(--muted); font-family: var(--mono); }
+
+  .btn-sm {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--muted);
+    font-family: var(--font);
+    transition: all .15s;
+  }
+  .btn-sm:hover { background: var(--card2); color: var(--text); }
+  .btn-sm.danger { border-color: rgba(239,68,68,.35); color: var(--red); }
+
+  /* Main content */
+  .main { padding: 24px; max-width: 1200px; margin: 0 auto; }
+
+  /* Connection status card */
+  .conn-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 14px;
+    box-shadow: 0 4px 20px rgba(0,0,0,.3);
+  }
+
+  .conn-info { display: flex; align-items: center; gap: 14px; }
+  .conn-icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: rgba(34,197,94,.1);
+    border: 1px solid rgba(34,197,94,.25);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+  }
+  .conn-title { font-weight: 700; font-size: 15px; }
+  .conn-sub   { font-size: 12px; color: var(--muted); margin-top: 2px; font-family: var(--mono); }
+
+  .conn-stats { display: flex; gap: 20px; flex-wrap: wrap; }
+  .stat-box   { text-align: center; }
+  .stat-val   { font-size: 22px; font-weight: 800; letter-spacing: -.03em; font-family: var(--mono); }
+  .stat-lbl   { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-top: 2px; }
+
+  /* Company tabs */
+  .co-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .co-tab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 18px;
+    cursor: pointer;
+    transition: all .15s;
+    font-family: var(--font);
+  }
+  .co-tab:hover { border-color: var(--borderHi); }
+  .co-tab.active {
+    border-color: var(--cyan);
+    background: rgba(0,212,255,.08);
+  }
+  .co-tab-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--cyan);
+  }
+  .co-tab-dot.wch { background: var(--yellow); }
+  .co-tab-name  { font-size: 13px; font-weight: 700; }
+  .co-tab-count { font-size: 11px; color: var(--muted); font-family: var(--mono); }
+
+  /* Branch list */
+  .branch-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,.3);
+  }
+
+  .branch-hdr {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .branch-hdr-title { font-weight: 700; font-size: 14px; }
+  .branch-hdr-badge {
+    background: rgba(0,212,255,.1);
+    border: 1px solid rgba(0,212,255,.25);
+    border-radius: 99px;
+    padding: 3px 12px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--cyan);
+    font-family: var(--mono);
+  }
+
+  .branch-row {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    border-bottom: 1px solid rgba(51,65,85,.5);
+    border-left: 3px solid transparent;
+    transition: background .15s;
+    gap: 14px;
+    animation: fadeIn .3s ease both;
+  }
+  .branch-row:last-child { border-bottom: none; }
+  .branch-row:hover { background: rgba(255,255,255,.03); }
+
+  .branch-num {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--label);
+    width: 22px;
+    flex-shrink: 0;
+    font-family: var(--mono);
+  }
+  .branch-name {
+    font-size: 13px;
+    font-weight: 600;
+    flex: 1;
+    min-width: 0;
+  }
+  .branch-ref {
+    font-size: 11px;
+    color: var(--muted);
+    font-family: var(--mono);
+    flex-shrink: 0;
+  }
+  .branch-status {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 99px;
+    flex-shrink: 0;
+  }
+  .status-active   { background: rgba(34,197,94,.12); color: var(--green); }
+  .status-inactive { background: rgba(148,163,184,.1); color: var(--muted); }
+
+  /* Loading skeleton */
+  .skel {
+    height: 14px;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--card2) 25%, var(--borderHi) 50%, var(--card2) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s ease infinite;
+    margin-bottom: 8px;
+  }
+
+  /* Next step banner */
+  .next-step {
+    margin-top: 20px;
+    background: rgba(0,212,255,.06);
+    border: 1px solid rgba(0,212,255,.2);
+    border-radius: 14px;
+    padding: 18px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .next-step-txt { font-size: 13px; color: var(--muted); }
+  .next-step-txt strong { color: var(--text); }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════
+     LOGIN PAGE
+════════════════════════════════════════ -->
+<div id="page-login">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="logo-mark">CAF</div>
+      <div>
+        <div class="login-title">Foodics Live Dashboard</div>
+        <div class="login-sub">CAF &amp; WACHAMEAN · Kuwait 2026</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Username</label>
+      <input id="l-user" type="text" placeholder="Enter username" autocomplete="username">
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input id="l-pass" type="password" placeholder="Enter password" autocomplete="current-password">
+    </div>
+
+    <button class="btn-primary" id="login-btn" onclick="doLogin()">
+      <span id="login-btn-txt">Sign In</span>
+    </button>
+
+    <div class="login-err" id="login-err"></div>
+    <div class="login-footer">CAF Financial Intelligence · Kuwait 2026</div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     CONNECTED PAGE
+════════════════════════════════════════ -->
+<div id="page-connected">
+
+  <!-- Header -->
+  <div class="hdr">
+    <div class="hdr-left">
+      <div class="hdr-mark">CAF</div>
+      <div>
+        <div class="hdr-name">CAF &amp; WACHAMEAN · Foodics Live</div>
+        <div class="hdr-sub">Live Operations · Kuwait 2026</div>
+      </div>
+    </div>
+    <div class="hdr-right">
+      <div class="status-dot" id="conn-dot"></div>
+      <span class="status-text" id="conn-text">Connected</span>
+      <button class="btn-sm danger" onclick="doLogout()">⏻ Sign Out</button>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div class="main">
+
+    <!-- Connection status card -->
+    <div class="conn-card">
+      <div class="conn-info">
+        <div class="conn-icon">🔗</div>
+        <div>
+          <div class="conn-title">Foodics API · Connected</div>
+          <div class="conn-sub" id="biz-ref">Loading business info…</div>
+        </div>
+      </div>
+      <div class="conn-stats">
+        <div class="stat-box">
+          <div class="stat-val" id="stat-total-branches">—</div>
+          <div class="stat-lbl">Total Branches</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" style="color:var(--cyan)" id="stat-caf">—</div>
+          <div class="stat-lbl">CAF</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" style="color:var(--yellow)" id="stat-wch">—</div>
+          <div class="stat-lbl">WACHAMEAN</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Company tabs -->
+    <div class="co-tabs">
+      <div class="co-tab active" id="tab-caf" onclick="switchCo('CAF')">
+        <div class="co-tab-dot"></div>
+        <div>
+          <div class="co-tab-name">CAF</div>
+          <div class="co-tab-count" id="tab-caf-count">— branches</div>
+        </div>
+      </div>
+      <div class="co-tab" id="tab-wch" onclick="switchCo('WACHAMEAN')">
+        <div class="co-tab-dot wch"></div>
+        <div>
+          <div class="co-tab-name">WACHAMEAN</div>
+          <div class="co-tab-count" id="tab-wch-count">— branches</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Branch list -->
+    <div class="branch-card">
+      <div class="branch-hdr">
+        <div class="branch-hdr-title" id="branch-list-title">Branches</div>
+        <div class="branch-hdr-badge" id="branch-list-badge">—</div>
+      </div>
+      <div id="branch-list">
+        <!-- skeleton -->
+        <div style="padding:16px 20px">
+          <div class="skel" style="width:60%"></div>
+          <div class="skel" style="width:80%"></div>
+          <div class="skel" style="width:50%"></div>
+          <div class="skel" style="width:75%"></div>
+          <div class="skel" style="width:65%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Next step banner -->
+    <div class="next-step">
+      <div class="next-step-txt">
+        ✅ <strong>Step 1 complete.</strong>
+        Foodics is connected and branch data is flowing.
+        Next → we build the <strong>KPI cards</strong> (Day Sales · MTD · YTD · Avg/Order).
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<script>
+// ═══════════════════════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════════════════════
+const FOODICS_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI5MGQ1YTcxOC1lMzBkLTQ5ODYtODY0Ni0wNjdlZDBkMzdkMGUiLCJqdGkiOiJhMTVhOWJjYmQwZTM2MGI3MTk0Yzk3ZjI5Y2Q0ZjBkYjUzNzY2YzNjOTFlMjJjYjhjNDFmZmFjYzZlNWZiN2ZjOThlYmRmNDY1MTQzMTg0YSIsImlhdCI6MTc3NzI4MTQzNy4yODg2NjEsIm5iZiI6MTc3NzI4MTQzNy4yODg2NjEsImV4cCI6MTkzNTA0NzgzNi45MDA1MjMsInN1YiI6IjlhMDM4N2NlLWU2MmItNDY4Ni05Yzg3LWY1YjJmZTRhYjUwMiIsInNjb3BlcyI6WyJnZW5lcmFsLnJlYWQiLCJvcmRlcnMubGlzdCIsImNvdXBvbnMucmVhZCIsImN1c3RvbWVycy5hY2NvdW50cy5yZWFkIiwiY3VzdG9tZXJzLmxpc3QiLCJjdXN0b21lcnMubG95YWx0eS5yZWFkIiwiaW52ZW50b3J5LnRyYW5zYWN0aW9ucy5yZWFkIiwiaW52ZW50b3J5LnNldHRpbmdzLnJlYWQiLCJtZW51LmluZ3JlZGllbnRzLnJlYWQiXSwiYnVzaW5lc3MiOiI5YTAzODdjZS1mNjE4LTQ4NzYtOTYzMy05M2E2N2I3MTUwMjgiLCJyZWZlcmVuY2UiOiIzNjgzMzkifQ.xRILb0qEzG68HpJ3-HpdqkoFXFC-_S7sGgDF78ENx_q25fuWoQ3w0qrfAQnjnT7yqzqSKLWlNHsb80YoA272NskOVtGAqp91f_et461ZiIErPV0nSQ2mEO5ds21bDz_PoRPzYvDjkc18GGgM2jWq2-prQ8oiisxJDwD0d58nIYcfO_ehu5F5NtPjrAA0202ob-pJnI6OdapP47Nwnn7PgdfAJCBJ_6AtExMW4sQzTNHOn8F2WdZzevRuigZTj8u3SHY33T49nSZY75VZ9s-b2of5CQ3UsmZYjtxMsXr47K6UXFvY1357BwCGcTyBle_4MH8RKT1WBINioZfB5bY4GGluZAzH-bFtXlfgWh2Lp2rl5OWwIxVfX_ZwGetmSv6Ass7vg0GiTUZ_6HG8UMnAmkXNOM-hdmsQ7PyU6M-4jW_tEB8e6ttGX9EVmQA4dUZ2Skv9lP5MUyPCnnHsS4oNctStB30THly8aP5d3Lit6Ub6QDgDBgMUe29xNOsCfKvCxHjtwTuKnQLfwuW_u89BiFAGFCwGjNrzJEWpIDX5THvEQAuTgzUESw3CW-FuwduIOpHPlWzJ5wdweAQ7wvAaqiSYOqmQ_4ZGM-mJz-kgYvM-czt9UXgg_94Me0Xn8Uj-l-Sm086FT95OWyVNK1NcTvuqj0bsWvYBa_2BCCZ1YeQ";
+const BASE = "https://api-beta.foodics.com/v5";
+
+// Dashboard login credentials
+const USERS = {
+  "admin":    "caf2026",
+  "operator": "caf_tool_2026",
+};
+
+// Branch name prefixes per brand
+const BRAND_PREFIXES = {
+  CAF:       ["KWCAF","CAF"],
+  WACHAMEAN: ["KWWCH","WCH","WACHAMEAN"],
+};
+
+// Branch accent colors
+const BRANCH_COLORS = [
+  "#00d4ff","#8b5cf6","#14b8a6","#3b82f6","#e879f9",
+  "#f97316","#ef4444","#22c55e","#84cc16","#fbbf24",
+];
+
+// ═══════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════
+let allBranches = [];   // raw from Foodics
+let currentCo   = "CAF";
+
+// ═══════════════════════════════════════════════════
+// AUTH
+// ═══════════════════════════════════════════════════
+function doLogin() {
+  const u = document.getElementById("l-user").value.trim();
+  const p = document.getElementById("l-pass").value;
+  const err = document.getElementById("login-err");
+  const btn = document.getElementById("login-btn");
+  const btnTxt = document.getElementById("login-btn-txt");
+
+  err.style.display = "none";
+
+  if (!u || !p) {
+    showLoginErr("Please enter username and password.");
+    return;
+  }
+
+  if (USERS[u] !== p) {
+    showLoginErr("Invalid username or password.");
+    return;
+  }
+
+  // Save session
+  sessionStorage.setItem("caf_fd_user", u);
+
+  // Show loading state
+  btn.disabled = true;
+  btnTxt.innerHTML = '<span style="animation:spin .6s linear infinite;display:inline-block">⟳</span> Connecting to Foodics…';
+
+  // Connect
+  connectFoodics();
+}
+
+function showLoginErr(msg) {
+  const el = document.getElementById("login-err");
+  el.textContent = msg;
+  el.style.display = "block";
+}
+
+document.getElementById("l-pass").addEventListener("keydown", e => {
+  if (e.key === "Enter") doLogin();
+});
+
+function doLogout() {
+  sessionStorage.removeItem("caf_fd_user");
+  allBranches = [];
+  document.getElementById("page-connected").style.display = "none";
+  document.getElementById("page-login").style.display = "flex";
+  document.getElementById("login-btn").disabled = false;
+  document.getElementById("login-btn-txt").textContent = "Sign In";
+  document.getElementById("login-err").style.display = "none";
+  document.getElementById("l-pass").value = "";
+}
+
+// ═══════════════════════════════════════════════════
+// FOODICS API
+// ═══════════════════════════════════════════════════
+async function apiGet(path, params = {}) {
+  const url = new URL(BASE + path);
+  Object.entries(params).forEach(([k, v]) => {
+    if (v != null) url.searchParams.set(k, v);
+  });
+  const r = await fetch(url.toString(), {
+    headers: {
+      "Authorization": "Bearer " + FOODICS_TOKEN,
+      "Accept": "application/json",
+    }
+  });
+  if (!r.ok) {
+    const t = await r.text();
+    throw new Error("Foodics API " + r.status + ": " + t.slice(0, 150));
+  }
+  return r.json();
+}
+
+async function apiAll(path, params = {}) {
+  let page = 1, all = [];
+  while (true) {
+    const d = await apiGet(path, { ...params, page, per_page: 50 });
+    all = all.concat(d.data || []);
+    const meta = d.meta || {};
+    if (!meta.last_page || page >= meta.last_page || page >= 20) break;
+    page++;
+  }
+  return all;
+}
+
+// ═══════════════════════════════════════════════════
+// CONNECT
+// ═══════════════════════════════════════════════════
+async function connectFoodics() {
+  try {
+    // 1. Fetch branches
+    allBranches = await apiAll("/branches");
+
+    // 2. Classify branches by brand
+    const cafBranches = allBranches.filter(b => isBrand(b.name, "CAF"));
+    const wchBranches = allBranches.filter(b => isBrand(b.name, "WACHAMEAN"));
+
+    // 3. Update UI stats
+    document.getElementById("stat-total-branches").textContent = allBranches.length;
+    document.getElementById("stat-caf").textContent            = cafBranches.length;
+    document.getElementById("stat-wch").textContent            = wchBranches.length;
+    document.getElementById("tab-caf-count").textContent       = cafBranches.length + " branches";
+    document.getElementById("tab-wch-count").textContent       = wchBranches.length + " branches";
+
+    // 4. Business ref from token payload
+    try {
+      const payload = JSON.parse(atob(FOODICS_TOKEN.split(".")[1]));
+      document.getElementById("biz-ref").textContent =
+        "Business ref: " + (payload.reference || "—") +
+        " · Token expires: " + new Date(payload.exp * 1000).toLocaleDateString("en-GB");
+    } catch(_) {
+      document.getElementById("biz-ref").textContent = "Connected to Foodics API";
+    }
+
+    // 5. Show connected page
+    document.getElementById("page-login").style.display      = "none";
+    document.getElementById("page-connected").style.display  = "block";
+    document.getElementById("conn-dot").className            = "status-dot";
+    document.getElementById("conn-text").textContent         = "Connected";
+
+    // 6. Render default branch list (CAF)
+    renderBranches("CAF");
+
+  } catch (e) {
+    // Reset login button
+    document.getElementById("login-btn").disabled = false;
+    document.getElementById("login-btn-txt").textContent = "Sign In";
+    showLoginErr("❌ Foodics connection failed: " + e.message);
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// BRAND DETECTION
+// ═══════════════════════════════════════════════════
+function isBrand(name, brand) {
+  const n = (name || "").toUpperCase();
+  const prefixes = BRAND_PREFIXES[brand] || [];
+  return prefixes.some(p => n.startsWith(p.toUpperCase()));
+}
+
+function cleanName(name, brand) {
+  const n = name || "";
+  const prefixes = BRAND_PREFIXES[brand] || [];
+  for (const p of prefixes) {
+    // Remove prefix + separator (_, -, space)
+    const re = new RegExp("^" + p + "[_\\-\\s]?", "i");
+    if (re.test(n)) return n.replace(re, "").trim();
+  }
+  return n;
+}
+
+// ═══════════════════════════════════════════════════
+// RENDER BRANCHES
+// ═══════════════════════════════════════════════════
+function switchCo(co) {
+  currentCo = co;
+  document.getElementById("tab-caf").classList.toggle("active", co === "CAF");
+  document.getElementById("tab-wch").classList.toggle("active", co === "WACHAMEAN");
+  renderBranches(co);
+}
+
+function renderBranches(co) {
+  const list = allBranches.filter(b => isBrand(b.name, co));
+  const el   = document.getElementById("branch-list");
+
+  document.getElementById("branch-list-title").textContent =
+    (co === "CAF" ? "CAF" : "WACHAMEAN") + " Branches";
+  document.getElementById("branch-list-badge").textContent =
+    list.length + " branches";
+
+  if (!list.length) {
+    el.innerHTML = '<div style="padding:28px;text-align:center;color:var(--muted);font-size:13px">No branches found for ' + co + '</div>';
+    return;
+  }
+
+  el.innerHTML = list.map((b, i) => {
+    const displayName = cleanName(b.name, co);
+    const isActive    = b.is_active !== false;
+    const ref         = b.reference || b.id?.slice(0, 8) || "—";
+    const color       = BRANCH_COLORS[i % BRANCH_COLORS.length];
+
+    return `<div class="branch-row" style="border-left-color:${color};animation-delay:${i * 30}ms">
+      <div class="branch-num">${String(i + 1).padStart(2, "0")}</div>
+      <div class="branch-name">${displayName}</div>
+      <div class="branch-ref">${ref}</div>
+      <div class="branch-status ${isActive ? "status-active" : "status-inactive"}">
+        ${isActive ? "Active" : "Inactive"}
+      </div>
+    </div>`;
+  }).join("");
+}
+
+// ═══════════════════════════════════════════════════
+// INIT — restore session
+// ═══════════════════════════════════════════════════
+if (sessionStorage.getItem("caf_fd_user")) {
+  document.getElementById("login-btn").disabled = true;
+  document.getElementById("login-btn-txt").innerHTML =
+    '<span style="animation:spin .6s linear infinite;display:inline-block">⟳</span> Reconnecting…';
+  connectFoodics();
+}
+</script>
+</body>
+</html>

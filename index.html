@@ -388,7 +388,7 @@ async function fetchOrders(from, to){
     "filter[business_date][gte]":from,
     "filter[business_date][lte]":to,
     "filter[status]":7,
-    "include":"branch,orderProducts.product,orderPaymentMethods.paymentMethod"
+    
   });
 }
 
@@ -494,8 +494,10 @@ async function loadAll(){
 
 function sumAmt(orders){ return orders.reduce((s,o)=>s+parseFloat(o.total_price||0),0); }
 function branchName(o){
+  // Try embedded branch first
   if(o.branch && o.branch.name) return o.branch.name;
-  const b=allBranches.find(b=>b.id===o.branch_id);
+  // Fallback to allBranches lookup by id
+  const b=allBranches.find(b=>b.id===o.branch_id||b.hid===o.branch_id);
   return b ? b.name : (o.branch_id||"Unknown");
 }
 function byBranch(orders){
